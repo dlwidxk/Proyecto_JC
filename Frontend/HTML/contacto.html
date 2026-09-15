@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | Fórmula Exacta</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <!-- Mismo header -->
+        <div class="logo"><img src="Recursos/images/logo.jpg" alt="Logo"><span>Fórmula Exacta</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="cursos.html">Cursos</a></li>
+                <li><a href="precios.html">Precios</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Contacto</h1>
+        <p>¿Tienes dudas? Escríbenos y te responderemos a la brevedad.</p>
+
+        <div class="contacto-wrapper">
+            <!--Formulario-->
+            <form action="#" method="POST" class="formulario">
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="telefono">Teléfono (opcional):</label>
+                <input type="tel" id="telefono" name="telefono">
+
+                <label for="nivel">¿Qué nivel te interesa?</label>
+                <select id="nivel" name="nivel">
+                    <option value="12-14">Nivel 12-14 años</option>
+                    <option value="15-17">Nivel 15-17 años</option>
+                </select>
+
+                <label for="mensaje">Mensaje o consulta:</label>
+                <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+
+                <button type="submit" class="btn-primary">Enviar Mensaje</button>
+            </form>
+
+            <!--Información de contacto-->
+            <div class="info-contacto">
+                <h3>Información de contacto:</h3>
+                <ul>
+                    <li>📧 info@formulaexacta.com</li>
+                    <li>📱 WhatsApp: +593 96 020 3174 </li>
+                    <li>📸 Redes sociales: Instagram / Facebook / TikTok (@formulaexacta)</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer><p>&copy; 2026 Fórmula Exacta.</p></footer>
+</body>
+</html>
