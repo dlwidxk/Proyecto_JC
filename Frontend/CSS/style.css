@@ -1,0 +1,855 @@
+/*El sitio web está basado en la paleta de colores de nightwing*/
+:root {
+    /*Paleta Nightwing*/
+    --nw-black: #0a0a0f;        /*Negro profundo (fondo principal)*/
+    --nw-dark-blue: #111827;    /*Azul muy oscuro (tarjetas, header)*/
+    --nw-blue: #1e3a8a;         /*Azul nocturno (bordes, detalles)*/
+    --nw-electric: #00a8ff;     /*Azul eléctrico (botones, acentos)*/
+    --nw-electric-hover: #0086cc;
+    --nw-silver: #b0b8c4;       /*Plata/Gris claro (texto secundario)*/
+    --nw-white: #f8f9fa;        /*Blanco roto (texto principal)*/
+    --nw-danger: #e94560;       /*Rojo para errores y admin*/
+    --nw-success: #10b981;      /*Verde para éxito*/
+    
+    /*Tipografía y Transiciones*/
+    --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --transition: all 0.3s ease;
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/*RESET Y ESTILOS BASE*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--nw-black);
+    color: var(--nw-white);
+    line-height: 1.6;
+    font-size: 16px;
+    overflow-x: hidden; /*Evita scroll horizontal accidental*/
+}
+
+a {
+    text-decoration: none;
+    color: var(--nw-electric);
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--nw-white);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/*HEADER / NAVEGACIÓN*/
+header {
+    background-color: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--nw-blue);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--nw-white);
+    letter-spacing: 1px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+nav ul {
+    display: flex;
+    gap: 25px;
+}
+
+nav a {
+    color: var(--nw-silver);
+    font-weight: 500;
+    font-size: 1rem;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--nw-electric);
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--nw-white);
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-login, .btn-admin {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-login {
+    background-color: transparent;
+    border: 1px solid var(--nw-silver);
+    color: var(--nw-silver);
+}
+
+.btn-login:hover {
+    border-color: var(--nw-electric);
+    color: var(--nw-electric);
+}
+
+.btn-admin {
+    background-color: var(--nw-danger);
+    color: var(--nw-white);
+    border: 1px solid var(--nw-danger);
+}
+
+.btn-admin:hover {
+    background-color: #c73650;
+    color: var(--nw-white);
+}
+
+/*HERO / BANNER PRINCIPAL*/
+.hero {
+    background: linear-gradient(135deg, var(--nw-black) 0%, var(--nw-dark-blue) 100%);
+    padding: 6rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--nw-blue);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 1s ease-in-out; /*UX: Animación de entrada*/
+}
+
+/*Efecto de luz sutil de fondo*/
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 168, 255, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    color: var(--nw-white);
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--nw-electric);
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.slogan {
+    font-size: 1.3rem;
+    color: var(--nw-silver);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+}
+
+.hero-features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+    color: var(--nw-white);
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/*BOTONES GENERALES Y ESTADOS*/
+.btn-primary, .btn-secondary {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--nw-electric);
+    color: var(--nw-black);
+    border-color: var(--nw-electric);
+}
+
+.btn-primary:hover {
+    background-color: var(--nw-electric-hover);
+    border-color: var(--nw-electric-hover);
+    color: var(--nw-white);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border-color: var(--nw-electric);
+    color: var(--nw-electric);
+}
+
+.btn-secondary:hover {
+    background-color: var(--nw-electric);
+    color: var(--nw-black);
+    transform: translateY(-2px);
+}
+
+/*UX: Estado de carga para botones (IA/Formularios)*/
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+}
+
+/*CONTENEDORES Y SECCIONES*/
+.container {
+    max-width: 1100px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+}
+
+h1, h2, h3, h4 {
+    color: var(--nw-white);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 2.2rem;
+    border-bottom: 2px solid var(--nw-electric);
+    display: inline-block;
+    padding-bottom: 10px;
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+    color: var(--nw-electric);
+}
+
+h3 {
+    font-size: 1.4rem;
+    color: var(--nw-silver);
+}
+
+p {
+    color: var(--nw-silver);
+    margin-bottom: 1rem;
+}
+
+/*BENEFICIOS (GRID)*/
+.beneficios {
+    padding: 4rem 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.beneficios h2 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.beneficios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.beneficio-card {
+    background-color: var(--nw-dark-blue);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--nw-blue);
+    transition: var(--transition);
+    border-top: 3px solid var(--nw-electric);
+    animation: slideUp 0.6s ease-out forwards; /*UX: Animación*/
+    opacity: 0; /*Inicia invisible para la animación*/
+}
+
+.beneficio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--nw-electric);
+}
+
+.beneficio-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.8rem;
+    color: var(--nw-white);
+}
+
+.beneficio-card p {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+/*TABLAS RESPONSIVAS (CURSOS Y PRECIOS)*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background-color: var(--nw-dark-blue);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+th, td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--nw-blue);
+}
+
+th {
+    background-color: var(--nw-blue);
+    color: var(--nw-white);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+td {
+    color: var(--nw-silver);
+    font-size: 0.95rem;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: rgba(0, 168, 255, 0.05);
+    color: var(--nw-white);
+}
+
+/*Secciones de Cursos*/
+.nivel {
+    background-color: var(--nw-dark-blue);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2.5rem;
+    border-left: 4px solid var(--nw-electric);
+}
+
+.nivel h2 {
+    margin-bottom: 0.5rem;
+}
+
+.nivel h3 {
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+}
+
+.nivel h4 {
+    margin-top: 1.5rem;
+    color: var(--nw-white);
+}
+
+.nivel ul {
+    margin-left: 1.5rem;
+    color: var(--nw-silver);
+}
+
+.nivel ul li {
+    margin-bottom: 0.5rem;
+    list-style-type: disc;
+}
+
+/*PRECIOS - BENEFICIOS Y DESCUENTOS*/
+.beneficios-incluidos, .descuentos {
+    background-color: var(--nw-dark-blue);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--nw-blue);
+}
+
+.beneficios-incluidos h3, .descuentos h3 {
+    color: var(--nw-electric);
+    margin-bottom: 1rem;
+}
+
+.beneficios-incluidos ul, .descuentos ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.beneficios-incluidos li, .descuentos li {
+    color: var(--nw-silver);
+    padding: 5px 0;
+    font-size: 0.95rem;
+}
+
+/*NOSOTROS - MISION Y VISION*/
+.mision-vision {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 2.5rem;
+}
+
+.card {
+    background-color: var(--nw-dark-blue);
+    padding: 2rem;
+    border-radius: 8px;
+    border-top: 3px solid var(--nw-electric);
+    box-shadow: var(--shadow-sm);
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.card p {
+    font-style: italic;
+    color: var(--nw-silver);
+    line-height: 1.7;
+}
+
+.valores ul, .equipo ul {
+    background-color: var(--nw-dark-blue);
+    padding: 1.5rem 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--nw-blue);
+}
+
+.valores li, .equipo li {
+    color: var(--nw-silver);
+    margin-bottom: 0.8rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.valores li::before, .equipo li::before {
+    content: '▹';
+    color: var(--nw-electric);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+/*CONTACTO - FORMULARIO*/
+.contacto-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.formulario {
+    background-color: var(--nw-dark-blue);
+    padding: 2.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--nw-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+.formulario label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--nw-white);
+    font-size: 0.9rem;
+}
+
+.formulario input, 
+.formulario select, 
+.formulario textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    background-color: var(--nw-black);
+    border: 1px solid var(--nw-blue);
+    border-radius: 4px;
+    color: var(--nw-white);
+    font-family: var(--font-main);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.formulario input:focus, 
+.formulario select:focus, 
+.formulario textarea:focus {
+    outline: none;
+    border-color: var(--nw-electric);
+    box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.2);
+}
+
+/*UX: Estado de error en formularios*/
+.formulario input.error,
+.formulario select.error,
+.formulario textarea.error {
+    border-color: var(--nw-danger);
+    box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+}
+
+.formulario textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.formulario button {
+    width: 100%;
+    border: none;
+    font-size: 1rem;
+}
+
+.info-contacto {
+    background-color: var(--nw-dark-blue);
+    padding: 2.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--nw-blue);
+    height: fit-content;
+}
+
+.info-contacto h3 {
+    color: var(--nw-electric);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--nw-blue);
+    padding-bottom: 10px;
+}
+
+.info-contacto ul {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-contacto li {
+    color: var(--nw-silver);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/*IA PERSONALIZADA (Estilos para Chatbot)*/
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    background-color: var(--nw-dark-blue);
+    border: 1px solid var(--nw-blue);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    display: none; /*Se activa con JS*/
+    z-index: 2000;
+}
+
+.chatbot-header {
+    background-color: var(--nw-blue);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--nw-white);
+    font-weight: bold;
+}
+
+.chatbot-messages {
+    padding: 15px;
+    height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    padding: 10px 15px;
+    border-radius: 8px;
+    max-width: 80%;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.message.bot {
+    background-color: var(--nw-blue);
+    color: var(--nw-white);
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+}
+
+.message.user {
+    background-color: var(--nw-electric);
+    color: var(--nw-black);
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+}
+
+.chatbot-input {
+    display: flex;
+    border-top: 1px solid var(--nw-blue);
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 12px;
+    background-color: var(--nw-black);
+    border: none;
+    color: var(--nw-white);
+    outline: none;
+}
+
+.chatbot-input button {
+    background-color: var(--nw-electric);
+    color: var(--nw-black);
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: var(--transition);
+}
+
+.chatbot-input button:hover {
+    background-color: var(--nw-electric-hover);
+    color: var(--nw-white);
+}
+
+/*FOOTER*/
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--nw-dark-blue);
+    color: var(--nw-silver);
+    border-top: 1px solid var(--nw-blue);
+    margin-top: 4rem;
+    font-size: 0.9rem;
+}
+
+/*ANIMACIONES (UX)*/
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/*RESPONSIVE DESIGN (UX Real)*/
+
+/*Tablets y pantallas medianas*/
+@media (max-width: 992px) {
+    .hero h1 { font-size: 2.5rem; }
+    .contacto-wrapper { grid-template-columns: 1fr; }
+    .mision-vision { grid-template-columns: 1fr; }
+}
+
+/*Móviles grandes*/
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .auth-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .hero { padding: 4rem 1.5rem; }
+    .hero h1 { font-size: 2rem; }
+    .subtitle { font-size: 0.9rem; letter-spacing: 2px; }
+    .slogan { font-size: 1.1rem; }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+    
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    
+    /*UX: Convertir tablas en tarjetas para móvil*/
+    table, thead, tbody, th, td, tr { 
+        display: block; 
+    }
+    
+    thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    tr { 
+        border: 1px solid var(--nw-blue);
+        margin-bottom: 15px;
+        border-radius: 8px;
+        background-color: var(--nw-dark-blue);
+    }
+    
+    td { 
+        border: none;
+        position: relative;
+        padding-left: 50%; 
+        text-align: right;
+        border-bottom: 1px solid var(--nw-blue);
+    }
+    
+    td:before { 
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 45%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: var(--nw-electric);
+        content: attr(data-label); /*Requiere atributo data-label en HTML*/
+    }
+    
+    td:last-child {
+        border-bottom: none;
+    }
+    
+    .nivel { padding: 1.5rem; }
+    .beneficios-incluidos ul, .descuentos ul { grid-template-columns: 1fr; }
+    .formulario, .info-contacto { padding: 1.5rem; }
+    
+    .chatbot-container {
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 12px 12px 0 0;
+    }
+}
+
+/*Móviles pequeños*/
+@media (max-width: 480px) {
+    .hero h1 { font-size: 1.6rem; }
+    .logo { font-size: 1.1rem; }
+    .logo img { height: 30px; }
+    nav a { font-size: 0.9rem; }
+    
+    .btn-login, .btn-admin {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+    
+    .beneficios-grid {
+        grid-template-columns: 1fr;
+    }
+}
