@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Fórmula Exacta Admin</title>
+    <!--Le digo al navegador que el CSS está dos carpetas arriba (salgo de admin y de HTML)-->
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body class="admin-body">
+
+    <!--Header del admin, más simple que el del sitio público-->
+    <header class="admin-header">
+        <div class="logo">
+            <img src="../../Recursos/images/logo.jpg" alt="Logo Fórmula Exacta">
+            <span>Panel de Administración</span>
+        </div>
+        <div class="admin-user">
+            <span id="welcome-message">Bienvenida</span>
+            <button id="btn-logout" class="btn-logout">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <main class="admin-container">
+
+        <!--Título del dashboard con un pequeño saludo-->
+        <h1>Dashboard</h1>
+        <p class="admin-subtitle">Resumen general de la academia</p>
+
+        <!--Aquí van las tarjetas de estadísticas rápidas-->
+        <section class="admin-stats">
+            <div class="stat-card">
+                <h3 id="total-alumnos">0</h3>
+                <p>Alumnos registrados</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="total-mensajes">0</h3>
+                <p>Mensajes recibidos</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="total-sin-leer">0</h3>
+                <p>Mensajes sin leer</p>
+            </div>
+        </section>
+
+        <!--Sección de alumnos-->
+        <section class="admin-seccion">
+            <div class="admin-seccion-header">
+                <h2>Alumnos registrados</h2>
+                <button id="btn-recargar-alumnos" class="btn-secondary">Recargar</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Nivel</th>
+                        <th>Materias</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-alumnos">
+                    <!--Aquí el JS va a inyectar las filas-->
+                    <tr><td colspan="5">Cargando alumnos...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!--Sección de mensajes de contacto-->
+        <section class="admin-seccion">
+            <div class="admin-seccion-header">
+                <h2>Mensajes de contacto</h2>
+                <button id="btn-recargar-mensajes" class="btn-secondary">Recargar</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Nivel</th>
+                        <th>Mensaje</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-mensajes">
+                    <!--Aquí el JS va a inyectar las filas-->
+                    <tr><td colspan="5">Cargando mensajes...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Fórmula Exacta - Panel de Administración</p>
+    </footer>
+
+    <!--Conecto el JS del admin que está dos carpetas arriba-->
+    <script src="../../JS/admin.js"></script>
+</body>
+</html>
