@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Precios | Fórmula Exacta</title>
+    <!--Fuentes de Google-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -34,9 +38,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td>Mensual</td><td>$45 USD/mes</td><td>$60 USD/mes</td></tr>
-                <tr><td>Semestral (5 meses)</td><td>$200 USD</td><td>$270 USD</td></tr>
-                <tr><td>Anual (10 meses)</td><td>$380 USD</td><td>$510 USD</td></tr>
+                <tr><td data-label="Plan">Mensual</td><td data-label="Nivel 12-14">$45 USD/mes</td><td data-label="Nivel 15-17">$60 USD/mes</td></tr>
+                <tr><td data-label="Plan">Semestral (5 meses)</td><td data-label="Nivel 12-14">$200 USD</td><td data-label="Nivel 15-17">$270 USD</td></tr>
+                <tr><td data-label="Plan">Anual (10 meses)</td><td data-label="Nivel 12-14">$380 USD</td><td data-label="Nivel 15-17">$510 USD</td></tr>
             </tbody>
         </table>
 
@@ -63,5 +67,10 @@
     </main>
 
     <footer><p>&copy; 2026 Fórmula Exacta.</p></footer>
+
+    <!--Conecto el JS principal del sitio-->
+    <script src="../JS/app.js"></script>
+    <!--Conecto el chat de IA-->
+    <script src="../JS/chatbot.js"></script>
 </body>
 </html>

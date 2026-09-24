@@ -36,6 +36,10 @@ body {
     line-height: 1.6;
     font-size: 16px;
     overflow-x: hidden; /*Evita scroll horizontal accidental*/
+    /*Uso flex column para que el footer siempre quede al final*/
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 a {
@@ -59,6 +63,7 @@ img {
 }
 
 /*HEADER / NAVEGACIÓN*/
+/*Uso flexbox para distribuir logo, menú y botones*/
 header {
     background-color: rgba(17, 24, 39, 0.95);
     backdrop-filter: blur(10px);
@@ -67,6 +72,7 @@ header {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: 15px;
     border-bottom: 1px solid var(--nw-blue);
     position: sticky;
     top: 0;
@@ -88,9 +94,19 @@ header {
     width: auto;
 }
 
+nav {
+    /*Flexbox para centrar el nav y que ocupe el espacio disponible*/
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
 nav ul {
     display: flex;
     gap: 25px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 nav a {
@@ -124,6 +140,7 @@ nav a:hover::after {
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .btn-login, .btn-admin {
@@ -135,6 +152,9 @@ nav a:hover::after {
     letter-spacing: 0.5px;
     transition: var(--transition);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-login {
@@ -160,6 +180,7 @@ nav a:hover::after {
 }
 
 /*HERO / BANNER PRINCIPAL*/
+/*Uso flexbox para centrar todo el contenido*/
 .hero {
     background: linear-gradient(135deg, var(--nw-black) 0%, var(--nw-dark-blue) 100%);
     padding: 6rem 2rem;
@@ -167,10 +188,14 @@ nav a:hover::after {
     border-bottom: 1px solid var(--nw-blue);
     position: relative;
     overflow: hidden;
-    animation: fadeIn 1s ease-in-out; /*UX: Animación de entrada*/
+    animation: fadeIn 1s ease-in-out;
+    /*Flexbox para centrar contenido vertical y horizontalmente*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-/*Efecto de luz sutil de fondo*/
 .hero::before {
     content: '';
     position: absolute;
@@ -186,14 +211,18 @@ nav a:hover::after {
     position: relative;
     z-index: 1;
     max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
+    /*Flexbox column para apilar textos y botones*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
 .hero h1 {
     font-size: 3rem;
     font-weight: 800;
     letter-spacing: 2px;
-    margin-bottom: 0.5rem;
     color: var(--nw-white);
     text-transform: uppercase;
 }
@@ -204,21 +233,22 @@ nav a:hover::after {
     font-weight: 600;
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
 }
 
 .slogan {
     font-size: 1.3rem;
     color: var(--nw-silver);
     font-style: italic;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
 }
 
 .hero-features {
+    /*Flexbox column para apilar las características*/
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 10px;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
     font-size: 1.1rem;
     color: var(--nw-white);
 }
@@ -226,13 +256,13 @@ nav a:hover::after {
 .hero-buttons {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 20px;
     flex-wrap: wrap;
 }
 
 /*BOTONES GENERALES Y ESTADOS*/
 .btn-primary, .btn-secondary {
-    display: inline-block;
     padding: 14px 32px;
     border-radius: 4px;
     font-weight: 700;
@@ -243,6 +273,12 @@ nav a:hover::after {
     transition: var(--transition);
     border: 2px solid transparent;
     text-align: center;
+    /*Flexbox para centrar el texto dentro del botón*/
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 50px;
 }
 
 .btn-primary {
@@ -271,7 +307,7 @@ nav a:hover::after {
     transform: translateY(-2px);
 }
 
-/*UX: Estado de carga para botones (IA/Formularios)*/
+/*UX: Estado de carga para botones*/
 .btn-loading {
     position: relative;
     color: transparent !important;
@@ -297,6 +333,12 @@ nav a:hover::after {
     max-width: 1100px;
     margin: 3rem auto;
     padding: 0 1.5rem;
+    width: 100%;
+    /*Flexbox column para apilar secciones*/
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1;
 }
 
 h1, h2, h3, h4 {
@@ -310,7 +352,7 @@ h1 {
     border-bottom: 2px solid var(--nw-electric);
     display: inline-block;
     padding-bottom: 10px;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 h2 {
@@ -328,22 +370,31 @@ p {
     margin-bottom: 1rem;
 }
 
-/*BENEFICIOS (GRID)*/
+/*BENEFICIOS CON FLEXBOX*/
 .beneficios {
     padding: 4rem 1.5rem;
     max-width: 1100px;
     margin: 0 auto;
+    width: 100%;
+    /*Flexbox column para apilar título y tarjetas*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
 }
 
 .beneficios h2 {
     text-align: center;
-    margin-bottom: 2.5rem;
 }
 
 .beneficios-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /*Flexbox wrap para que las tarjetas se acomoden según el espacio*/
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
     gap: 25px;
+    width: 100%;
 }
 
 .beneficio-card {
@@ -351,10 +402,17 @@ p {
     padding: 2rem;
     border-radius: 8px;
     border: 1px solid var(--nw-blue);
-    transition: var(--transition);
     border-top: 3px solid var(--nw-electric);
-    animation: slideUp 0.6s ease-out forwards; /*UX: Animación*/
-    opacity: 0; /*Inicia invisible para la animación*/
+    transition: var(--transition);
+    animation: slideUp 0.6s ease-out forwards;
+    opacity: 0;
+    /*flex: 1 con min-width para que las tarjetas se adapten*/
+    flex: 1 1 250px;
+    max-width: 350px;
+    /*Flexbox column para alinear el contenido interno*/
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
 
 .beneficio-card:hover {
@@ -365,13 +423,14 @@ p {
 
 .beneficio-card h3 {
     font-size: 1.15rem;
-    margin-bottom: 0.8rem;
     color: var(--nw-white);
+    margin: 0;
 }
 
 .beneficio-card p {
     font-size: 0.95rem;
-    margin-bottom: 0;
+    margin: 0;
+    color: var(--nw-silver);
 }
 
 /*TABLAS RESPONSIVAS (CURSOS Y PRECIOS)*/
@@ -421,30 +480,37 @@ tr:hover td {
     border-radius: 8px;
     margin-bottom: 2.5rem;
     border-left: 4px solid var(--nw-electric);
+    /*Flexbox column para apilar título, tabla y lista*/
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .nivel h2 {
-    margin-bottom: 0.5rem;
+    margin: 0;
 }
 
 .nivel h3 {
     font-style: italic;
-    margin-bottom: 1.5rem;
     font-weight: 400;
+    margin: 0;
 }
 
 .nivel h4 {
-    margin-top: 1.5rem;
     color: var(--nw-white);
+    margin: 0;
 }
 
 .nivel ul {
-    margin-left: 1.5rem;
     color: var(--nw-silver);
+    /*Flexbox column para la lista de beneficios*/
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 1.5rem;
 }
 
 .nivel ul li {
-    margin-bottom: 0.5rem;
     list-style-type: disc;
 }
 
@@ -455,32 +521,40 @@ tr:hover td {
     border-radius: 8px;
     margin-bottom: 2rem;
     border: 1px solid var(--nw-blue);
+    /*Flexbox column para apilar título y lista*/
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .beneficios-incluidos h3, .descuentos h3 {
     color: var(--nw-electric);
-    margin-bottom: 1rem;
+    margin: 0;
 }
 
 .beneficios-incluidos ul, .descuentos ul {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
+    /*Flexbox wrap para distribuir los items en columnas*/
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 30px;
+    width: 100%;
 }
 
 .beneficios-incluidos li, .descuentos li {
     color: var(--nw-silver);
     padding: 5px 0;
     font-size: 0.95rem;
+    /*Cada item ocupa mínimo 200px*/
+    flex: 1 1 200px;
 }
 
 /*NOSOTROS - MISION Y VISION*/
 .mision-vision {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /*Flexbox wrap para acomodar las tarjetas*/
+    display: flex;
+    flex-wrap: wrap;
     gap: 25px;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
 }
 
 .card {
@@ -489,17 +563,24 @@ tr:hover td {
     border-radius: 8px;
     border-top: 3px solid var(--nw-electric);
     box-shadow: var(--shadow-sm);
+    /*flex: 1 con min-width para cada card*/
+    flex: 1 1 300px;
+    /*Flexbox column para el contenido interno*/
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .card h2 {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin: 0;
 }
 
 .card p {
     font-style: italic;
     color: var(--nw-silver);
     line-height: 1.7;
+    margin: 0;
 }
 
 .valores ul, .equipo ul {
@@ -508,11 +589,14 @@ tr:hover td {
     border-radius: 8px;
     margin-bottom: 2rem;
     border: 1px solid var(--nw-blue);
+    /*Flexbox column para apilar los items*/
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
 
 .valores li, .equipo li {
     color: var(--nw-silver);
-    margin-bottom: 0.8rem;
     padding-left: 1rem;
     position: relative;
 }
@@ -527,9 +611,11 @@ tr:hover td {
 
 /*CONTACTO - FORMULARIO*/
 .contacto-wrapper {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    /*Flexbox wrap para que el formulario y la info se acomoden*/
+    display: flex;
+    flex-wrap: wrap;
     gap: 30px;
+    align-items: flex-start;
 }
 
 .formulario {
@@ -538,14 +624,19 @@ tr:hover td {
     border-radius: 8px;
     border: 1px solid var(--nw-blue);
     box-shadow: var(--shadow-sm);
+    /*El formulario ocupa 2/3 del ancho si hay espacio*/
+    flex: 2 1 500px;
+    /*Flexbox column para apilar los campos*/
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .formulario label {
-    display: block;
-    margin-bottom: 8px;
     font-weight: 600;
     color: var(--nw-white);
     font-size: 0.9rem;
+    margin-top: 0.5rem;
 }
 
 .formulario input, 
@@ -553,7 +644,6 @@ tr:hover td {
 .formulario textarea {
     width: 100%;
     padding: 12px 15px;
-    margin-bottom: 20px;
     background-color: var(--nw-black);
     border: 1px solid var(--nw-blue);
     border-radius: 4px;
@@ -588,6 +678,7 @@ tr:hover td {
     width: 100%;
     border: none;
     font-size: 1rem;
+    margin-top: 1rem;
 }
 
 .info-contacto {
@@ -595,17 +686,23 @@ tr:hover td {
     padding: 2.5rem;
     border-radius: 8px;
     border: 1px solid var(--nw-blue);
-    height: fit-content;
+    /*La info ocupa 1/3 del ancho si hay espacio*/
+    flex: 1 1 280px;
+    /*Flexbox column para apilar título y lista*/
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .info-contacto h3 {
     color: var(--nw-electric);
-    margin-bottom: 1.5rem;
     border-bottom: 2px solid var(--nw-blue);
     padding-bottom: 10px;
+    margin: 0;
 }
 
 .info-contacto ul {
+    /*Flexbox column para apilar los items*/
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -628,24 +725,30 @@ tr:hover td {
     border-radius: 12px;
     box-shadow: var(--shadow-lg);
     overflow: hidden;
-    display: none; /*Se activa con JS*/
+    display: none;
     z-index: 2000;
+    /*Flexbox column para apilar header, mensajes e input*/
+    flex-direction: column;
+    max-height: 500px;
 }
 
 .chatbot-header {
     background-color: var(--nw-blue);
     padding: 15px;
+    color: var(--nw-white);
+    font-weight: bold;
+    /*Flexbox para distribuir título y botón cerrar*/
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--nw-white);
-    font-weight: bold;
+    gap: 10px;
 }
 
 .chatbot-messages {
     padding: 15px;
     height: 300px;
     overflow-y: auto;
+    /*Flexbox column para apilar mensajes*/
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -674,6 +777,7 @@ tr:hover td {
 }
 
 .chatbot-input {
+    /*Flexbox para distribuir input y botón*/
     display: flex;
     border-top: 1px solid var(--nw-blue);
 }
@@ -685,6 +789,7 @@ tr:hover td {
     border: none;
     color: var(--nw-white);
     outline: none;
+    font-family: var(--font-main);
 }
 
 .chatbot-input button {
@@ -695,6 +800,10 @@ tr:hover td {
     cursor: pointer;
     font-weight: bold;
     transition: var(--transition);
+    /*Flexbox para centrar el texto*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chatbot-input button:hover {
@@ -702,15 +811,60 @@ tr:hover td {
     color: var(--nw-white);
 }
 
+/*Botón flotante del chat*/
+.chat-toggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--nw-electric);
+    color: var(--nw-black);
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
+    transition: var(--transition);
+    z-index: 1500;
+    /*Flexbox para centrar el emoji*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 168, 255, 0.6);
+}
+
+.chat-close {
+    background: transparent;
+    border: none;
+    color: var(--nw-white);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.chat-close:hover {
+    color: var(--nw-danger);
+}
+
 /*FOOTER*/
 footer {
-    text-align: center;
     padding: 2rem;
     background-color: var(--nw-dark-blue);
     color: var(--nw-silver);
     border-top: 1px solid var(--nw-blue);
     margin-top: 4rem;
     font-size: 0.9rem;
+    text-align: center;
+    /*Flexbox column para apilar el contenido*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 /*ANIMACIONES (UX)*/
@@ -739,8 +893,9 @@ footer {
 /*Tablets y pantallas medianas*/
 @media (max-width: 992px) {
     .hero h1 { font-size: 2.5rem; }
-    .contacto-wrapper { grid-template-columns: 1fr; }
-    .mision-vision { grid-template-columns: 1fr; }
+    /*Flexbox permite que estos ya se acomoden solos, pero ajusto tamaños*/
+    .formulario { flex: 1 1 100%; }
+    .info-contacto { flex: 1 1 100%; }
 }
 
 /*Móviles grandes*/
@@ -750,6 +905,10 @@ footer {
         gap: 15px;
         padding: 1rem;
         text-align: center;
+    }
+    
+    nav {
+        width: 100%;
     }
     
     nav ul {
@@ -776,7 +935,6 @@ footer {
     .btn-primary, .btn-secondary {
         width: 100%;
         max-width: 300px;
-        text-align: center;
     }
     
     h1 { font-size: 1.8rem; }
@@ -818,7 +976,7 @@ footer {
         text-align: left;
         font-weight: bold;
         color: var(--nw-electric);
-        content: attr(data-label); /*Requiere atributo data-label en HTML*/
+        content: attr(data-label);
     }
     
     td:last-child {
@@ -826,7 +984,7 @@ footer {
     }
     
     .nivel { padding: 1.5rem; }
-    .beneficios-incluidos ul, .descuentos ul { grid-template-columns: 1fr; }
+    .beneficios-incluidos li, .descuentos li { flex: 1 1 100%; }
     .formulario, .info-contacto { padding: 1.5rem; }
     
     .chatbot-container {
@@ -849,18 +1007,21 @@ footer {
         padding: 6px 12px;
     }
     
-    .beneficios-grid {
-        grid-template-columns: 1fr;
+    .beneficio-card {
+        flex: 1 1 100%;
+        max-width: 100%;
     }
 }
+
 /*ESTILOS DEL LOGIN DE ADMIN*/
+/*Uso flexbox para centrar la tarjeta de login*/
 .login-wrapper {
     min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--nw-black) 0%, var(--nw-dark-blue) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
-    background: linear-gradient(135deg, var(--nw-black) 0%, var(--nw-dark-blue) 100%);
 }
 
 .login-card {
@@ -871,25 +1032,31 @@ footer {
     box-shadow: var(--shadow-lg);
     width: 100%;
     max-width: 420px;
+    /*Flexbox column para apilar header, form y link*/
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 2rem;
+    /*Flexbox column para apilar logo, título y subtítulo*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .login-header img {
     height: 60px;
-    margin: 0 auto 1rem;
-    display: block;
 }
 
 .login-header h1 {
     font-size: 1.5rem;
     border: none;
-    display: block;
     padding: 0;
-    margin-bottom: 0.5rem;
+    margin: 0;
     color: var(--nw-white);
 }
 
@@ -906,14 +1073,11 @@ footer {
     padding: 10px;
     border-radius: 4px;
     font-size: 0.9rem;
-    margin-bottom: 1rem;
     text-align: center;
 }
 
 .volver-sitio {
-    display: block;
     text-align: center;
-    margin-top: 1.5rem;
     color: var(--nw-silver);
     font-size: 0.9rem;
 }
@@ -927,27 +1091,30 @@ footer {
     background-color: var(--nw-black);
 }
 
-/*Header del admin un poco más compacto que el público*/
+/*Header del admin*/
 .admin-header {
     background-color: var(--nw-dark-blue);
     padding: 1rem 2rem;
+    border-bottom: 1px solid var(--nw-blue);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /*Flexbox para distribuir logo y usuario*/
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 15px;
-    border-bottom: 1px solid var(--nw-blue);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
 }
 
 .admin-user {
+    /*Flexbox para alinear nombre y botón de logout*/
     display: flex;
     align-items: center;
     gap: 15px;
     color: var(--nw-silver);
     font-size: 0.95rem;
+    flex-wrap: wrap;
 }
 
 .btn-logout {
@@ -962,6 +1129,10 @@ footer {
     font-size: 0.8rem;
     letter-spacing: 0.5px;
     transition: var(--transition);
+    /*Flexbox para centrar el texto*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-logout:hover {
@@ -974,20 +1145,25 @@ footer {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1.5rem;
+    /*Flexbox column para apilar secciones*/
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1;
 }
 
 .admin-subtitle {
     color: var(--nw-silver);
-    margin-bottom: 2rem;
     font-size: 0.95rem;
+    margin: 0;
 }
 
 /*Tarjetas de estadísticas*/
 .admin-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /*Flexbox wrap para acomodar las tarjetas*/
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
-    margin-bottom: 2.5rem;
 }
 
 .stat-card {
@@ -995,8 +1171,16 @@ footer {
     padding: 1.5rem;
     border-radius: 8px;
     border-left: 4px solid var(--nw-electric);
-    text-align: center;
     transition: var(--transition);
+    /*flex: 1 con min-width para cada tarjeta*/
+    flex: 1 1 200px;
+    /*Flexbox column para centrar el contenido*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.3rem;
 }
 
 .stat-card:hover {
@@ -1007,8 +1191,8 @@ footer {
 .stat-card h3 {
     font-size: 2.2rem;
     color: var(--nw-electric);
-    margin-bottom: 0.3rem;
     font-weight: 800;
+    margin: 0;
 }
 
 .stat-card p {
@@ -1023,14 +1207,17 @@ footer {
     padding: 1.5rem;
     border-radius: 8px;
     border: 1px solid var(--nw-blue);
-    margin-bottom: 2rem;
+    /*Flexbox column para apilar header y tabla*/
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .admin-seccion-header {
+    /*Flexbox para distribuir título y botón recargar*/
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
     flex-wrap: wrap;
     gap: 10px;
 }
@@ -1040,14 +1227,13 @@ footer {
     margin: 0;
 }
 
-/*Ajusto el botón secundario dentro del admin para que sea más pequeño*/
 .admin-seccion-header .btn-secondary {
     padding: 8px 16px;
     font-size: 0.8rem;
     letter-spacing: 0.5px;
 }
 
-/*Responsive para móvil*/
+/*Responsive para móvil del admin*/
 @media (max-width: 768px) {
     .admin-header {
         flex-direction: column;

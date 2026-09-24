@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cursos | Fórmula Exacta</title>
+    <!--Fuentes de Google-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css"><!--conexion con mi css-->
 </head>
 <body>
@@ -35,8 +39,8 @@
                     <tr><th>Materia</th><th>Contenido</th><th>Duración</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Matemáticas</td><td>Aritmética, álgebra básica, geometría, estadística</td><td>4 meses</td></tr>
-                    <tr><td>Física</td><td>Introducción a la física, movimiento, fuerzas, energía</td><td>4 meses</td></tr>
+                    <tr><td data-label="Materia">Matemáticas</td><td data-label="Contenido">Aritmética, álgebra básica, geometría, estadística</td><td data-label="Duración">4 meses</td></tr>
+                    <tr><td data-label="Materia">Física</td><td data-label="Contenido">Introducción a la física, movimiento, fuerzas, energía</td><td data-label="Duración">4 meses</td></tr>
                 </tbody>
             </table>
 
@@ -60,9 +64,9 @@
                     <tr><th>Materia</th><th>Contenido</th><th>Duración</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Matemáticas</td><td>Álgebra avanzada, trigonometría, geometría analítica, precálculo</td><td>4 meses</td></tr>
-                    <tr><td>Física</td><td>Mecánica, termodinámica, ondas, electricidad, óptica</td><td>4 meses</td></tr>
-                    <tr><td>🚀 CÁLCULO (PLUS)</td><td>Límites, derivadas, integrales, aplicaciones</td><td>4 meses</td></tr>
+                    <tr><td data-label="Materia">Matemáticas</td><td data-label="Contenido">Álgebra avanzada, trigonometría, geometría analítica, precálculo</td><td data-label="Duración">4 meses</td></tr>
+                    <tr><td data-label="Materia">Física</td><td data-label="Contenido">Mecánica, termodinámica, ondas, electricidad, óptica</td><td data-label="Duración">4 meses</td></tr>
+                    <tr><td data-label="Materia">🚀 CÁLCULO (PLUS)</td><td data-label="Contenido">Límites, derivadas, integrales, aplicaciones</td><td data-label="Duración">4 meses</td></tr>
                 </tbody>
             </table>
 
@@ -79,5 +83,10 @@
     </main>
 
     <footer><p>&copy; 2026 Fórmula Exacta.</p></footer>
+
+    <!--Conecto el JS principal del sitio-->
+    <script src="../JS/app.js"></script>
+    <!--Conecto el chat de IA-->
+    <script src="../JS/chatbot.js"></script>
 </body>
 </html>
