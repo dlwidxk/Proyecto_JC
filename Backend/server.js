@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const dns = require('dns');
+const Alumno = require('./models/Alumno');
 
 require('dotenv').config();
 
@@ -35,4 +36,24 @@ app.get('/', (req, res) => {
         mensaje: 'Backend de Fórmula Exacta funcionando',
         baseDeDatos: 'MongoDB'
     });
+});
+// Crear un alumno
+app.post('/api/alumnos', async (req, res) => {
+    try {
+        const alumno = new Alumno(req.body);
+
+        const alumnoGuardado = await alumno.save();
+
+        res.status(201).json({
+            exito: true,
+            alumno: alumnoGuardado
+        });
+
+    } catch (error) {
+        res.status(400).json({
+            exito: false,
+            mensaje: 'No se pudo guardar el alumno',
+            error: error.message
+        });
+    }
 });
