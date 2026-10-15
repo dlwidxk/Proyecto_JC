@@ -1,14 +1,9 @@
-/* Aquí va toda la lógica del panel de administración */
+/* LÓGICA DEL PANEL DE ADMINISTRACIÓN */
 /* Este archivo se carga en admin/index.html y admin/dashboard.html */
-/* Detecto en qué página estoy y ejecuto lo que corresponda */
 
-/* CONFIGURACIÓN DEL ADMIN */
+/* CONFIGURACIÓN DEL ADMINISTRADOR */
 const ADMIN_CONFIG = {
-    apiUrl: 'http://localhost:2323/api',
-    usuarioPrueba: 'admin',
-    passwordPrueba: 'formulaexacta2026',
-    nombrePrueba: 'Directora',
-    tokenPrueba: 'token-de-prueba-local'
+    apiUrl: 'http://localhost:2323/api'
 };
 
 /* CLAVES DEL LOCALSTORAGE */
@@ -18,7 +13,7 @@ const STORAGE_KEYS = {
     token: 'adminToken'
 };
 
-/* Espero a que el HTML esté cargado */
+/* INICIAR CUANDO EL HTML ESTÉ CARGADO */
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Iniciando panel de administración...');
 
@@ -36,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* FUNCIÓN PARA EL LOGIN */
+/* LOGIN */
 const iniciarLogin = (loginForm) => {
     Object.values(STORAGE_KEYS).forEach(clave => {
         localStorage.removeItem(clave);
@@ -47,10 +42,11 @@ const iniciarLogin = (loginForm) => {
 
         const credenciales = {
             usuario: document.getElementById('usuario').value.trim(),
-            password: document.getElementById('password').value.trim()
+            password: document.getElementById('password').value
         };
 
         const errorMsg = document.getElementById('login-error');
+
         errorMsg.style.display = 'none';
         errorMsg.textContent = '';
 
@@ -73,7 +69,7 @@ const iniciarLogin = (loginForm) => {
     });
 };
 
-/* FUNCIÓN QUE INTENTA HACER LOGIN EN EL BACKEND */
+/* COMUNICACIÓN CON EL BACKEND PARA INICIAR SESIÓN */
 const intentarLogin = async (credenciales) => {
     try {
         const respuesta = await fetch(
@@ -89,7 +85,7 @@ const intentarLogin = async (credenciales) => {
 
         const data = await respuesta.json();
 
-        if (!respuesta.ok || !data.exito) {
+        if (!respuesta.ok || !data.exito || !data.token) {
             return {
                 exito: false,
                 mensaje: data.mensaje || 'No se pudo iniciar sesión'
@@ -107,12 +103,12 @@ const intentarLogin = async (credenciales) => {
 
         return {
             exito: false,
-            mensaje: 'No se pudo conectar con el servidor. Comprueba que el backend esté iniciado.'
+            mensaje: 'No se pudo conectar con el servidor. Comprueba que esté iniciado.'
         };
     }
 };
 
-/* FUNCIÓN QUE GUARDA LA SESIÓN */
+/* GUARDAR SESIÓN */
 const guardarSesion = (nombre, token) => {
     localStorage.setItem(STORAGE_KEYS.logueado, 'true');
     localStorage.setItem(STORAGE_KEYS.nombre, nombre);
@@ -121,18 +117,19 @@ const guardarSesion = (nombre, token) => {
     console.log(`Sesión guardada para ${nombre}`);
 };
 
-/* FUNCIÓN QUE MUESTRA UN ERROR EN EL LOGIN */
+/* MOSTRAR ERRORES DEL LOGIN */
 const mostrarErrorLogin = (elemento, mensaje) => {
     elemento.textContent = mensaje;
     elemento.style.display = 'block';
 };
 
-/* FUNCIÓN PARA EL DASHBOARD */
+/* INICIAR DASHBOARD */
 const iniciarDashboard = () => {
     const logueado = localStorage.getItem(STORAGE_KEYS.logueado);
+    const token = localStorage.getItem(STORAGE_KEYS.token);
 
-    if (logueado !== 'true') {
-        window.location.href = 'index.html';
+    if (logueado !== 'true' || !token) {
+        cerrarSesion();
         return;
     }
 
@@ -165,7 +162,7 @@ const iniciarDashboard = () => {
     }
 };
 
-/* FUNCIÓN QUE CIERRA LA SESIÓN */
+/* CERRAR SESIÓN */
 const cerrarSesion = () => {
     Object.values(STORAGE_KEYS).forEach(clave => {
         localStorage.removeItem(clave);
@@ -175,7 +172,7 @@ const cerrarSesion = () => {
     window.location.href = 'index.html';
 };
 
-/* FUNCIÓN QUE TRAE LOS ALUMNOS DESDE EL BACKEND */
+/* CONSULTAR ALUMNOS DESDE EL BACKEND */
 const cargarAlumnos = async () => {
     const tabla = document.getElementById('tabla-alumnos');
 
@@ -184,8 +181,23 @@ const cargarAlumnos = async () => {
     tabla.innerHTML = '<tr><td colspan="5">Cargando alumnos...</td></tr>';
 
     try {
-        const respuesta = await fetch(`${ADMIN_CONFIG.apiUrl}/admin/alumnos`);
+        const token = localStorage.getItem(STORAGE_KEYS.token);
+
+        const respuesta = await fetch(
+            `${ADMIN_CONFIG.apiUrl}/admin/alumnos`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
         const data = await respuesta.json();
+
+        if (respuesta.status === 401 || respuesta.status === 403) {
+            cerrarSesion();
+            return;
+        }
 
         if (!respuesta.ok || !data.exito) {
             tabla.innerHTML = '<tr><td colspan="5">Error al cargar alumnos</td></tr>';
@@ -194,7 +206,7 @@ const cargarAlumnos = async () => {
 
         actualizarEstadistica('total-alumnos', data.total);
 
-        if (data.alumnos.length === 0) {
+        if (!Array.isArray(data.alumnos) || data.alumnos.length === 0) {
             tabla.innerHTML = '<tr><td colspan="5">No hay alumnos registrados aún</td></tr>';
             return;
         }
@@ -207,28 +219,30 @@ const cargarAlumnos = async () => {
     }
 };
 
-/* FUNCIÓN QUE CREA UNA FILA HTML PARA UN ALUMNO */
+/* CREAR FILA DE ALUMNO */
 const crearFilaAlumno = (alumno) => {
     const colorEstado = alumno.estado === 'Activo'
         ? 'var(--nw-success)'
         : 'var(--nw-danger)';
 
-    const materias = alumno.materias && alumno.materias.length > 0
+    const materias = Array.isArray(alumno.materias) && alumno.materias.length > 0
         ? alumno.materias.join(', ')
         : 'Sin asignar';
 
     return `
         <tr>
-            <td data-label="Nombre">${alumno.nombre}</td>
-            <td data-label="Email">${alumno.email}</td>
-            <td data-label="Nivel">${alumno.nivel}</td>
+            <td data-label="Nombre">${alumno.nombre || ''}</td>
+            <td data-label="Email">${alumno.email || ''}</td>
+            <td data-label="Nivel">${alumno.nivel || ''}</td>
             <td data-label="Materias">${materias}</td>
-            <td data-label="Estado" style="color: ${colorEstado}; font-weight: bold;">${alumno.estado}</td>
+            <td data-label="Estado" style="color: ${colorEstado}; font-weight: bold;">
+                ${alumno.estado || 'Sin estado'}
+            </td>
         </tr>
     `;
 };
 
-/* FUNCIÓN QUE TRAE LOS MENSAJES DE CONTACTO */
+/* CONSULTAR MENSAJES DE CONTACTO */
 const cargarMensajes = async () => {
     const tabla = document.getElementById('tabla-mensajes');
 
@@ -237,8 +251,23 @@ const cargarMensajes = async () => {
     tabla.innerHTML = '<tr><td colspan="5">Cargando mensajes...</td></tr>';
 
     try {
-        const respuesta = await fetch(`${ADMIN_CONFIG.apiUrl}/contacto`);
+        const token = localStorage.getItem(STORAGE_KEYS.token);
+
+        const respuesta = await fetch(
+            `${ADMIN_CONFIG.apiUrl}/contacto`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
         const data = await respuesta.json();
+
+        if (respuesta.status === 401 || respuesta.status === 403) {
+            cerrarSesion();
+            return;
+        }
 
         if (!respuesta.ok || !data.exito) {
             tabla.innerHTML = '<tr><td colspan="5">Error al cargar mensajes</td></tr>';
@@ -247,15 +276,17 @@ const cargarMensajes = async () => {
 
         actualizarEstadistica('total-mensajes', data.total);
 
-        const sinLeer = data.mensajes.filter(m => !m.leido).length;
+        const mensajes = Array.isArray(data.mensajes) ? data.mensajes : [];
+        const sinLeer = mensajes.filter(mensaje => !mensaje.leido).length;
+
         actualizarEstadistica('total-sin-leer', sinLeer);
 
-        if (data.mensajes.length === 0) {
+        if (mensajes.length === 0) {
             tabla.innerHTML = '<tr><td colspan="5">No hay mensajes aún</td></tr>';
             return;
         }
 
-        tabla.innerHTML = data.mensajes.map(crearFilaMensaje).join('');
+        tabla.innerHTML = mensajes.map(crearFilaMensaje).join('');
 
     } catch (error) {
         console.error('Error al cargar mensajes:', error);
@@ -263,22 +294,25 @@ const cargarMensajes = async () => {
     }
 };
 
-/* FUNCIÓN QUE CREA UNA FILA HTML PARA UN MENSAJE */
+/* CREAR FILA DE MENSAJE */
 const crearFilaMensaje = (mensaje) => {
-    const fecha = new Date(mensaje.fechaEnvio).toLocaleDateString('es-EC', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
+    const fecha = mensaje.fechaEnvio
+        ? new Date(mensaje.fechaEnvio).toLocaleDateString('es-EC', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+        : 'Sin fecha';
 
-    const mensajeCorto = mensaje.mensaje.length > 60
-        ? mensaje.mensaje.substring(0, 60) + '...'
-        : mensaje.mensaje;
+    const textoMensaje = mensaje.mensaje || '';
+    const mensajeCorto = textoMensaje.length > 60
+        ? textoMensaje.substring(0, 60) + '...'
+        : textoMensaje;
 
     return `
         <tr>
-            <td data-label="Nombre">${mensaje.nombre}</td>
-            <td data-label="Email">${mensaje.email}</td>
+            <td data-label="Nombre">${mensaje.nombre || ''}</td>
+            <td data-label="Email">${mensaje.email || ''}</td>
             <td data-label="Nivel">${mensaje.nivel || 'No especificado'}</td>
             <td data-label="Mensaje">${mensajeCorto}</td>
             <td data-label="Fecha">${fecha}</td>
@@ -286,7 +320,7 @@ const crearFilaMensaje = (mensaje) => {
     `;
 };
 
-/* FUNCIÓN QUE ACTUALIZA UNA TARJETA DE ESTADÍSTICA */
+/* ACTUALIZAR ESTADÍSTICAS */
 const actualizarEstadistica = (id, valor) => {
     const elemento = document.getElementById(id);
 
