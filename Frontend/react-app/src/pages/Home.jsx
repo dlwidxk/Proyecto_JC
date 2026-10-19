@@ -1,4 +1,86 @@
+import { useState } from 'react';
+
+const API_URL = 'http://localhost:2323/api';
+
 function Home() {
+  const [formulario, setFormulario] = useState({
+    nombre: '',
+    email: '',
+    nivel: '',
+    materias: [],
+  });
+
+  const [cargando, setCargando] = useState(false);
+  const [mensaje, setMensaje] = useState('');
+  const [tipoMensaje, setTipoMensaje] = useState('');
+
+  function manejarCambio(event) {
+    const { name, value } = event.target;
+
+    setFormulario((anterior) => ({
+      ...anterior,
+      [name]: value,
+    }));
+  }
+
+  function manejarMaterias(event) {
+    const { value, checked } = event.target;
+
+    setFormulario((anterior) => ({
+      ...anterior,
+      materias: checked
+        ? [...anterior.materias, value]
+        : anterior.materias.filter((materia) => materia !== value),
+    }));
+  }
+
+  async function manejarEnvio(event) {
+    event.preventDefault();
+    setMensaje('');
+    setTipoMensaje('');
+
+    if (formulario.materias.length === 0) {
+      setMensaje('Selecciona al menos una materia.');
+      setTipoMensaje('error');
+      return;
+    }
+
+    setCargando(true);
+
+    try {
+      const respuesta = await fetch(`${API_URL}/alumnos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formulario),
+      });
+
+      const data = await respuesta.json();
+
+      if (!respuesta.ok || !data.exito) {
+        throw new Error(data.mensaje || 'No se pudo enviar la inscripción.');
+      }
+
+      setMensaje('¡Inscripción enviada correctamente!');
+      setTipoMensaje('exito');
+
+      setFormulario({
+        nombre: '',
+        email: '',
+        nivel: '',
+        materias: [],
+      });
+    } catch (error) {
+      setMensaje(
+        error.message || 'No se pudo conectar con el servidor.'
+      );
+      setTipoMensaje('error');
+    } finally {
+      setCargando(false);
+    }
+  }
+
   return (
     <main>
       <section className="hero" id="inicio">
@@ -136,15 +218,103 @@ function Home() {
       </section>
 
       <section className="contact-section" id="contacto">
-        <span className="section-eyebrow">EMPECEMOS JUNTOS</span>
-        <h2>Tu siguiente paso empieza hoy.</h2>
+        <span className="section-eyebrow">INSCRIPCIONES</span>
+        <h2>Da el siguiente paso.</h2>
         <p>
-          Conoce nuestros programas y encuentra una opción que se adapte a
-          tus objetivos académicos.
+          Completa tus datos y nos pondremos en contacto contigo.
         </p>
-        <a href="mailto:info@formulaexacta.com" className="button-primary">
-          Contáctanos <span aria-hidden="true">↗</span>
-        </a>
+
+        <form
+          onSubmit={manejarEnvio}
+          style={{
+            display: 'grid',
+            gap: '16px',
+            width: 'min(100%, 480px)',
+            margin: '28px auto 0',
+            textAlign: 'left',
+          }}
+        >
+          <label>
+            Nombre completo
+            <input
+              name="nombre"
+              value={formulario.nombre}
+              onChange={manejarCambio}
+              autoComplete="name"
+              required
+              maxLength={100}
+              placeholder="Escribe tu nombre"
+              style={{
+                display: 'block',
+                width: '100%',
+                marginTop: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+              }}
+            />
+          </label>
+
+          <label>
+            Correo electrónico
+            <input
+              type="email"
+              name="email"
+              value={formulario.email}
+              onChange={manejarCambio}
+              autoComplete="email"
+              required
+              maxLength={150}
+              placeholder="tucorreo@ejemplo.com"
+              style={{
+                display: 'block',
+                width: '100%',
+                marginTop: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+              }}
+            />
+          </label>
+
+          <label>
+            Nivel académico
+            <select
+              name="nivel"
+              value={formulario.nivel}
+              onChange={manejarCambio}
+              required
+              style={{
+                display: 'block',
+                width: '100%',
+                marginTop: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+              }}
+            >
+              <option value="">Selecciona el  nivel de interés</option>
+              <option value="12-14">12 a 14 años</option>
+              <option value="15-17">15 a 17 años</option>
+            </select>
+          </label>
+
+          {mensaje && (
+            <p
+              role="status"
+              style={{
+                color: tipoMensaje === 'error' ? '#ff7777' : '#75d9a0',
+              }}
+            >
+              {mensaje}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="button-primary"
+            disabled={cargando}
+          >
+            {cargando ? 'Enviando inscripción...' : 'Enviar inscripción'}
+          </button>
+        </form>
       </section>
     </main>
   );

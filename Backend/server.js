@@ -73,6 +73,26 @@ app.get('/', (req, res) => {
     }); 
 }); 
 
+ // Consultar alumnos desde el frontend
+app.get('/api/alumnos', verificarToken, async (req, res) => {
+    try {
+        const alumnos = await Alumno.find()
+            .select('nombre nivel materias estado');
+
+        res.json({
+            exito: true,
+            total: alumnos.length,
+            alumnos: alumnos
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            exito: false,
+            mensaje: 'No se pudieron consultar los alumnos'
+        });
+    }
+});
+
 // Crear un alumno 
 app.post('/api/alumnos', async (req, res) => { 
     try { 
