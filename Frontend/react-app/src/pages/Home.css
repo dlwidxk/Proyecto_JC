@@ -1,3 +1,6 @@
+
+/* Aquí va el diseño de la portada que queremos mantener */
+
 .hero {
   position: relative;
   display: grid;
@@ -81,6 +84,8 @@
   max-width: 560px;
 }
 
+/* Aquí van los botones de la portada */
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -100,7 +105,10 @@
   font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  transition: transform 0.25s ease, background 0.25s ease,
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
     border-color 0.25s ease;
 }
 
@@ -115,6 +123,18 @@
   background: #47c0ff;
 }
 
+.button-primary:focus-visible,
+.button-secondary:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
+}
+
+.button-primary:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  transform: none;
+}
+
 .button-secondary {
   border: 1px solid #303b4d;
   color: #f8f9fa;
@@ -125,6 +145,8 @@
   transform: translateY(-3px);
   border-color: #00a8ff;
 }
+
+/* Aquí mostramos los datos destacados de la portada */
 
 .hero-stats {
   display: flex;
@@ -150,6 +172,8 @@
   color: #8793a5;
   font-size: 0.8rem;
 }
+
+/* Aquí van la tarjeta y las fórmulas decorativas */
 
 .hero-visual {
   position: relative;
@@ -268,6 +292,8 @@
   transform: rotate(-5deg);
 }
 
+/* Aquí van los beneficios en forma de tarjetas */
+
 .benefits-section {
   padding: 100px 9%;
   background: #0e1119;
@@ -293,20 +319,28 @@
 .benefits-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  align-items: stretch;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .benefit-card {
-  padding: 27px 22px;
+  min-width: 0;
+  padding: 28px 23px;
   border: 1px solid #252d3a;
   border-radius: 15px;
   background: linear-gradient(145deg, #141923, #10131b);
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .benefit-card:hover {
   transform: translateY(-6px);
   border-color: rgba(0, 168, 255, 0.6);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
 .benefit-icon {
@@ -336,6 +370,8 @@
   line-height: 1.8;
 }
 
+/* Aquí organizamos la sección de cursos */
+
 .courses-section {
   display: flex;
   align-items: center;
@@ -351,9 +387,20 @@
   max-width: 650px;
 }
 
-.courses-section p {
+.courses-section h2 {
   max-width: 600px;
 }
+
+.courses-section p {
+  max-width: 600px;
+  margin-bottom: 0;
+}
+
+.courses-section > .button-primary {
+  flex-shrink: 0;
+}
+
+/* Aquí damos estilo a los formularios de inscripción y contacto */
 
 .contact-section {
   display: flex;
@@ -361,10 +408,22 @@
   align-items: center;
   padding: 90px 9%;
   background:
-    radial-gradient(ellipse at 50% 100%, rgba(0, 168, 255, 0.12), transparent 65%),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(0, 168, 255, 0.12),
+      transparent 65%
+    ),
     #10141e;
   text-align: center;
   scroll-margin-top: 100px;
+}
+
+.contact-section > .section-eyebrow {
+  display: inline-block;
+}
+
+.contact-section h2 {
+  max-width: 750px;
 }
 
 .contact-section > p {
@@ -372,47 +431,193 @@
   margin-bottom: 25px;
 }
 
+/* Aquí va el panel que contiene cada formulario */
+
+.contact-section form {
+  box-sizing: border-box;
+  padding: 30px;
+  border: 1px solid #293548;
+  border-radius: 18px;
+  background: rgba(10, 14, 23, 0.88);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.2);
+}
+
+.contact-section form > label {
+  display: block;
+  color: #e8edf5;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+/* Aquí van los campos donde se escriben los datos */
+
+.contact-section form input:not([type="checkbox"]),
+.contact-section form select,
+.contact-section form textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 1px solid #303b4d;
+  color: #f8f9fa;
+  background: #0e1420;
+  font: inherit;
+  font-size: 0.95rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.contact-section form input:not([type="checkbox"]),
+.contact-section form select {
+  min-height: 46px;
+}
+
+.contact-section form textarea {
+  min-height: 125px;
+  line-height: 1.6;
+}
+
+.contact-section form input::placeholder,
+.contact-section form textarea::placeholder {
+  color: #78869b;
+}
+
+.contact-section form input:focus,
+.contact-section form select:focus,
+.contact-section form textarea:focus {
+  border-color: #00a8ff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.12);
+}
+
+.contact-section form select {
+  cursor: pointer;
+}
+
+/* Aquí se muestran las opciones de materias */
+
+.contact-section form fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-section form legend {
+  margin-bottom: 12px;
+  color: #e8edf5;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.contact-section form fieldset label {
+  color: #b9c4d4;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.contact-section form input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #00a8ff;
+  cursor: pointer;
+}
+
+/* Aquí va el botón para enviar cada formulario */
+
+.contact-section form .button-primary {
+  width: 100%;
+  min-height: 49px;
+  font: inherit;
+  font-weight: 700;
+}
+
+/* Aquí aparecen los mensajes de resultado */
+
+.contact-section form [role="status"] {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* Aquí hacemos que la tarjeta principal tenga un movimiento suave */
+
 @keyframes float-card {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
 }
 
-@media (max-width: 1000px) {
+/* Aquí ajustamos el diseño para pantallas medianas */
+
+@media (max-width: 1100px) {
   .hero {
-    grid-template-columns: 1fr 0.8fr;
-    padding: 75px 6%;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 25px;
+    padding-right: 6%;
+    padding-left: 6%;
   }
 
-  .benefits-section {
-    padding: 80px 6%;
+  .hero h1 {
+    font-size: clamp(2.7rem, 5vw, 4rem);
+    letter-spacing: -2px;
+  }
+
+  .benefits-section,
+  .courses-section,
+  .contact-section {
+    padding-right: 6%;
+    padding-left: 6%;
   }
 
   .benefits-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .courses-section {
-    padding: 75px 6%;
+  .formula-card-main {
+    max-width: 290px;
+  }
+
+  .floating-formula-top {
+    right: -5px;
+  }
+
+  .floating-formula-bottom {
+    left: -5px;
   }
 }
 
+/* Aquí acomodamos las secciones para celulares */
+
 @media (max-width: 720px) {
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 15px;
+    min-height: auto;
     padding: 70px 6% 45px;
   }
 
+  .hero-content {
+    max-width: 100%;
+  }
+
   .hero h1 {
+    font-size: clamp(2.5rem, 8vw, 3.6rem);
     letter-spacing: -2px;
+  }
+
+  .hero-description {
+    font-size: 0.98rem;
   }
 
   .hero-visual {
     min-height: 370px;
+    margin-top: 10px;
   }
 
   .formula-card-main {
@@ -437,24 +642,51 @@
     left: 2%;
   }
 
-  .benefits-section {
+  .benefits-section,
+  .courses-section,
+  .contact-section {
     padding: 70px 6%;
+  }
+
+  .section-heading {
+    margin-bottom: 32px;
+  }
+
+  .benefits-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .benefit-card {
+    padding: 23px 18px;
   }
 
   .courses-section {
     flex-direction: column;
     align-items: flex-start;
-    padding: 70px 6%;
+    gap: 24px;
   }
 
-  .contact-section {
-    padding: 70px 6%;
+  .courses-section > .button-primary {
+    max-width: 100%;
+  }
+
+  .contact-section form {
+    padding: 24px;
   }
 }
+
+/* Aquí hacemos los últimos ajustes para celulares pequeños */
 
 @media (max-width: 480px) {
   .hero {
     padding-top: 50px;
+  }
+
+  .hero-label,
+  .section-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
   }
 
   .hero h1 {
@@ -466,31 +698,69 @@
   }
 
   .hero-actions a {
-    width: 100%;
     box-sizing: border-box;
+    width: 100%;
   }
 
   .hero-stats {
     gap: 24px;
   }
 
-  .benefits-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .benefit-card {
-    padding: 24px;
+  .hero-visual {
+    min-height: 320px;
   }
 
   .formula-card-main {
     padding: 24px 16px;
   }
 
+  .formula-symbol {
+    font-size: 5rem;
+  }
+
+  .orbit {
+    width: 240px;
+    height: 240px;
+  }
+
+  .orbit-two {
+    width: 290px;
+    height: 290px;
+  }
+
   .floating-formula {
     padding: 10px 12px;
     font-size: 0.8rem;
   }
+
+  .floating-formula-top {
+    top: 15px;
+  }
+
+  .floating-formula-bottom {
+    bottom: 15px;
+  }
+
+  .benefits-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .benefit-card {
+    padding: 24px;
+  }
+
+  .section-heading h2,
+  .courses-section h2,
+  .contact-section h2 {
+    font-size: 2rem;
+  }
+
+  .contact-section form {
+    padding: 20px 16px;
+  }
 }
+
+/* Aquí respetamos a quienes prefieren menos animaciones */
 
 @media (prefers-reduced-motion: reduce) {
   *,
