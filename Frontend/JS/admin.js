@@ -13,6 +13,17 @@ const STORAGE_KEYS = {
     token: 'adminToken'
 };
 
+/* ESCAPAR HTML PARA MOSTRAR DATOS DE FORMA SEGURA */
+const escaparHTML = (texto) => {
+    return String(texto ?? '').replace(/[&<>"']/g, (caracter) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[caracter]);
+};
+
 /* INICIAR CUANDO EL HTML ESTÉ CARGADO */
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Iniciando panel de administración...');
@@ -221,22 +232,22 @@ const cargarAlumnos = async () => {
 
 /* CREAR FILA DE ALUMNO */
 const crearFilaAlumno = (alumno) => {
-    const colorEstado = alumno.estado === 'Activo'
-        ? 'var(--nw-success)'
-        : 'var(--nw-danger)';
-
     const materias = Array.isArray(alumno.materias) && alumno.materias.length > 0
         ? alumno.materias.join(', ')
         : 'Sin asignar';
 
+    const colorEstado = alumno.estado === 'Activo'
+        ? 'var(--nw-success)'
+        : 'var(--nw-danger)';
+
     return `
         <tr>
-            <td data-label="Nombre">${alumno.nombre || ''}</td>
-            <td data-label="Email">${alumno.email || ''}</td>
-            <td data-label="Nivel">${alumno.nivel || ''}</td>
-            <td data-label="Materias">${materias}</td>
+            <td data-label="Nombre">${escaparHTML(alumno.nombre || '')}</td>
+            <td data-label="Email">${escaparHTML(alumno.email || '')}</td>
+            <td data-label="Nivel">${escaparHTML(alumno.nivel || '')}</td>
+            <td data-label="Materias">${escaparHTML(materias)}</td>
             <td data-label="Estado" style="color: ${colorEstado}; font-weight: bold;">
-                ${alumno.estado || 'Sin estado'}
+                ${escaparHTML(alumno.estado || 'Sin estado')}
             </td>
         </tr>
     `;
@@ -294,7 +305,7 @@ const cargarMensajes = async () => {
     }
 };
 
-/* CREAR FILA DE MENSAJE */
+/* CREAR FILA DE MENSAJE: MOSTRAR EL TEXTO COMPLETO */
 const crearFilaMensaje = (mensaje) => {
     const fecha = mensaje.fechaEnvio
         ? new Date(mensaje.fechaEnvio).toLocaleDateString('es-EC', {
@@ -304,18 +315,29 @@ const crearFilaMensaje = (mensaje) => {
         })
         : 'Sin fecha';
 
-    const textoMensaje = mensaje.mensaje || '';
-    const mensajeCorto = textoMensaje.length > 60
-        ? textoMensaje.substring(0, 60) + '...'
-        : textoMensaje;
+    const nombre = escaparHTML(mensaje.nombre || '');
+    const email = escaparHTML(mensaje.email || '');
+    const nivel = escaparHTML(mensaje.nivel || 'No especificado');
+    const textoMensaje = escaparHTML(mensaje.mensaje || '');
+    const fechaFormateada = escaparHTML(fecha);
 
     return `
         <tr>
-            <td data-label="Nombre">${mensaje.nombre || ''}</td>
-            <td data-label="Email">${mensaje.email || ''}</td>
-            <td data-label="Nivel">${mensaje.nivel || 'No especificado'}</td>
-            <td data-label="Mensaje">${mensajeCorto}</td>
-            <td data-label="Fecha">${fecha}</td>
+            <td data-label="Nombre">${nombre}</td>
+            <td data-label="Email">${email}</td>
+            <td data-label="Nivel">${nivel}</td>
+            <td
+                data-label="Mensaje"
+                style="
+                    white-space: pre-wrap;
+                    overflow-wrap: anywhere;
+                    word-break: normal;
+                    min-width: 250px;
+                    max-width: 500px;
+                    vertical-align: top;
+                "
+            >${textoMensaje}</td>
+            <td data-label="Fecha">${fechaFormateada}</td>
         </tr>
     `;
 };
