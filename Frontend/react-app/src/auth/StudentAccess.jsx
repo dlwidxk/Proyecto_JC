@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiUrl } from '../services/api';
+import { recursosAlumnoPorNivel } from './studentResources';
 import './StudentAccess.css';
 
 const programasPorNivel = {
@@ -18,6 +19,7 @@ function StudentAccess({ sesion, onLogin, onLogout, onNavigate }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
+  const [materiaActiva, setMateriaActiva] = useState('matematicas');
 
   async function iniciarSesion(event) {
     event.preventDefault();
@@ -46,6 +48,13 @@ function StudentAccess({ sesion, onLogin, onLogout, onNavigate }) {
   }
 
   const programa = sesion ? programasPorNivel[sesion.alumno.nivel] : null;
+  const recursos = sesion ? recursosAlumnoPorNivel[sesion.alumno.nivel] : null;
+  const materiaSeleccionada = recursos?.materias.find((materia) => materia.id === materiaActiva)
+    || recursos?.materias[0];
+
+  useEffect(() => {
+    setMateriaActiva('matematicas');
+  }, [sesion?.alumno.nivel]);
 
   return (
     <section className="student-access-section" id="acceso-estudiantes" aria-labelledby="student-access-title">
@@ -95,17 +104,63 @@ function StudentAccess({ sesion, onLogin, onLogout, onNavigate }) {
         </div>
       ) : (
         <div className="student-dashboard-card">
-          <span className="section-eyebrow">MI ESPACIO</span>
-          <h2 id="student-access-title">Hola, {sesion.alumno.nombre}.</h2>
-          <p>Tu cuenta está lista para que continúes avanzando.</p>
+          <div className="student-dashboard-heading">
+            <div>
+              <span className="section-eyebrow">MI ESPACIO</span>
+              <h2 id="student-access-title">Hola, {sesion.alumno.nombre}.</h2>
+              <p>Este es tu espacio para repasar los temas de tu grupo.</p>
+            </div>
+            <button className="button-secondary" onClick={onLogout}>Cerrar sesión</button>
+          </div>
+
           <div className="student-program-card">
             <span>Tu nivel · {sesion.alumno.nivel} años</span>
             <h3>{programa?.nombre || 'Programa de ciencias exactas'}</h3>
-            <p>Áreas de estudio: {programa?.materias || 'Consulta tus materias con la academia'}.</p>
+            <p>Materias de tu grupo: {programa?.materias || 'Consulta tus materias con la academia'}.</p>
             <p>Estado de la cuenta: {sesion.alumno.estado || 'Activo'}.</p>
           </div>
-          <a className="student-course-link" href="?" onClick={(event) => { event.preventDefault(); onNavigate('inicio', 'cursos'); }}>Ver el contenido de tus cursos <span aria-hidden="true">↗</span></a>
-          <button className="button-secondary student-logout" onClick={onLogout}>Cerrar sesión</button>
+
+          {recursos && materiaSeleccionada && (
+            <>
+              <aside className="student-schedule" aria-label="Horario del grupo">
+                <span>HORARIO DE TU GRUPO · HORA DE ECUADOR</span>
+                <strong>{recursos.horario}</strong>
+                <small>Horario de referencia para este proyecto.</small>
+              </aside>
+
+              {/* Cada botón abre la sección de la materia que el estudiante quiere repasar. */}
+              <nav className="student-subject-nav" aria-label="Materias de tu grupo">
+                {recursos.materias.map((materia) => (
+                  <button
+                    key={materia.id}
+                    type="button"
+                    aria-pressed={materiaActiva === materia.id}
+                    onClick={() => setMateriaActiva(materia.id)}
+                  >
+                    {materia.nombre}
+                  </button>
+                ))}
+              </nav>
+
+              <article className="student-resource-panel" aria-live="polite">
+                <span className="section-eyebrow">RECURSO DE {materiaSeleccionada.nombre.toUpperCase()}</span>
+                <h3>{materiaSeleccionada.titulo}</h3>
+                <p>{materiaSeleccionada.descripcion}</p>
+                <div className="student-practice-prompt">
+                  <strong>Pruébalo por tu cuenta</strong>
+                  <p>{materiaSeleccionada.practica}</p>
+                </div>
+                <a className="student-video-link" href={materiaSeleccionada.url} target="_blank" rel="noreferrer">
+                  <span aria-hidden="true">▶</span>
+                  Ver video: {materiaSeleccionada.video}
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <small className="student-resource-credit">Recurso educativo de Khan Academy en español.</small>
+              </article>
+            </>
+          )}
+
+          {!recursos && <p className="student-login-error">No encontramos recursos para tu nivel. Contacta a la academia para que revise tu cuenta.</p>}
         </div>
       )}
     </section>
