@@ -1,6 +1,6 @@
 import { useState } from 'react';
-
-const API_URL = 'http://localhost:2323/api';
+import { apiUrl } from '../services/api';
+import AcademySections from './AcademySections';
 
 function Home() {
   /* Aquí guardamos los datos de la inscripción */
@@ -44,7 +44,7 @@ function Home() {
     setCargando(true);
 
     try {
-      const respuesta = await fetch(`${API_URL}/alumnos`, {
+      const respuesta = await fetch(apiUrl('/alumnos'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ function Home() {
     setEnviandoContacto(true);
 
     try {
-      const respuesta = await fetch(`${API_URL}/contacto`, {
+      const respuesta = await fetch(apiUrl('/contacto'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -259,10 +259,12 @@ function Home() {
         </div>
       </section>
 
+      <AcademySections />
+
       {/* Aquí presentamos los cursos y sus beneficios */}
       <section
         className="courses-section"
-        id="cursos"
+        id="destacados"
         aria-labelledby="titulo-cursos"
       >
         <div>

@@ -1,5 +1,5 @@
 
-const API_URL = 'http://localhost:2323/api';
+import { apiUrl } from './api';
 
 /**
  * Consulta los alumnos de la API protegida.
@@ -10,7 +10,7 @@ export async function obtenerAlumnos(token) {
     throw new Error('Debes iniciar sesión para consultar los alumnos.');
   }
 
-  const respuesta = await fetch(`${API_URL}/alumnos`, {
+  const respuesta = await fetch(apiUrl('/alumnos'), {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,

@@ -5,7 +5,7 @@ function Header() {
     <header className="site-header">
       <a className="brand" href="#inicio" aria-label="Fórmula Exacta, inicio">
         <img
-          src="/images/logo.jpg"
+          src={`${import.meta.env.BASE_URL}images/logo.jpg`}
           alt="Logo de Fórmula Exacta"
           className="brand-logo"
         />
@@ -16,8 +16,9 @@ function Header() {
 
       <nav className="main-nav" aria-label="Navegación principal">
         <a href="#inicio">Inicio</a>
-        <a href="#beneficios">Beneficios</a>
         <a href="#cursos">Cursos</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#precios">Precios</a>
         <a href="#contacto">Contacto</a>
       </nav>
 

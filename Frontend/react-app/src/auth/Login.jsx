@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
-
-const API_URL = 'http://localhost:2323/api';
+import { apiUrl } from '../services/api';
 
 function Login({ onLogin }) {
   const [usuario, setUsuario] = useState('');
@@ -21,7 +20,7 @@ function Login({ onLogin }) {
     setCargando(true);
 
     try {
-      const respuesta = await fetch(`${API_URL}/admin/login`, {
+      const respuesta = await fetch(apiUrl('/admin/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

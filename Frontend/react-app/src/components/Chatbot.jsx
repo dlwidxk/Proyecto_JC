@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { enviarPreguntaChatbot } from '../services/chatbotService';
 import './Chatbot.css';
 
 function Chatbot() {
   const [abierto, setAbierto] = useState(false);
   const [mensaje, setMensaje] = useState('');
+  const [cargando, setCargando] = useState(false);
   const [mensajes, setMensajes] = useState([
     {
       id: 1,
@@ -12,14 +14,14 @@ function Chatbot() {
     }
   ]);
 
-  function enviarMensaje(evento) {
+  async function enviarMensaje(evento) {
     evento.preventDefault();
 
     const texto = mensaje.trim();
 
-    if (!texto) return;
+    // Evitamos enviar mensajes vacíos o varias preguntas a la vez.
+    if (!texto || cargando) return;
 
-    // Guardamos el mensaje que escribe el usuario.
     setMensajes((anteriores) => [
       ...anteriores,
       {
@@ -30,6 +32,36 @@ function Chatbot() {
     ]);
 
     setMensaje('');
+    setCargando(true);
+
+    try {
+      // Pedimos la respuesta al backend conectado con la IA.
+      const historial = mensajes.slice(-8).map((item) => ({
+        role: item.tipo === 'usuario' ? 'user' : 'assistant',
+        content: item.texto,
+      }));
+      const respuesta = await enviarPreguntaChatbot(texto, historial);
+
+      setMensajes((anteriores) => [
+        ...anteriores,
+        {
+          id: Date.now() + 1,
+          tipo: 'bot',
+          texto: respuesta || 'No recibí una respuesta. Inténtalo de nuevo.'
+        }
+      ]);
+    } catch (error) {
+      setMensajes((anteriores) => [
+        ...anteriores,
+        {
+          id: Date.now() + 1,
+          tipo: 'bot',
+          texto: error.message || 'No pude conectarme. Inténtalo de nuevo.'
+        }
+      ]);
+    } finally {
+      setCargando(false);
+    }
   }
 
   return (
@@ -64,6 +96,12 @@ function Chatbot() {
                 {item.texto}
               </div>
             ))}
+
+            {cargando && (
+              <div className="chatbot-mensaje bot" role="status">
+                Estoy preparando tu respuesta...
+              </div>
+            )}
           </div>
 
           <form
@@ -77,10 +115,14 @@ function Chatbot() {
               placeholder="Escribe tu pregunta..."
               aria-label="Escribe tu mensaje"
               maxLength={1000}
+              disabled={cargando}
             />
 
-            <button type="submit" disabled={!mensaje.trim()}>
-              Enviar
+            <button
+              type="submit"
+              disabled={!mensaje.trim() || cargando}
+            >
+              {cargando ? 'Enviando...' : 'Enviar'}
             </button>
           </form>
         </section>
