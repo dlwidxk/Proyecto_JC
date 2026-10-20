@@ -400,6 +400,15 @@
   flex-shrink: 0;
 }
 
+/* Dejamos claras las dos formas de consultar una inscripción. */
+.enrollment-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 /* Aquí damos estilo a los formularios de inscripción y contacto */
 
 .contact-section {
@@ -683,6 +692,15 @@
 
   .courses-section > .button-primary {
     max-width: 100%;
+  }
+
+  .enrollment-actions {
+    width: 100%;
+  }
+
+  .enrollment-actions a {
+    width: min(100%, 320px);
+    text-align: center;
   }
 
   .contact-section form {

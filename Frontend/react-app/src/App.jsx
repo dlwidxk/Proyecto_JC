@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import Login from './auth/Login';
 import StudentAccess from './auth/StudentAccess';
+import AdminEnrollmentForm from './auth/AdminEnrollmentForm';
 import { asignarContrasenaAlumno, obtenerAlumnos } from './services/alumnosService';
 import { marcarContactoLeido, obtenerContactos } from './services/contactosService';
 import './App.css';
@@ -142,6 +143,9 @@ function App() {
                 <article><strong>{contactos.length}</strong><span>Mensajes recibidos</span></article>
                 <article><strong>{contactos.filter((contacto) => !contacto.leido).length}</strong><span>Mensajes sin leer</span></article>
               </div>
+
+              {/* Desde aquí la administradora crea el registro y el acceso del estudiante. */}
+              <AdminEnrollmentForm token={sesion.token} onCreated={() => consultarDatosAdmin(sesion.token)} />
 
               {error && <p role="alert" className="admin-error">{error}</p>}
 

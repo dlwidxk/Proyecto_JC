@@ -149,8 +149,8 @@ app.get('/api/alumnos', verificarToken, async (req, res) => {
     }
 });
 
-// Crear cuenta de alumno e inscripción.
-app.post('/api/alumnos', async (req, res) => {
+// La academia crea cada cuenta desde el panel; aquí no dejamos altas públicas.
+app.post('/api/admin/alumnos', verificarToken, async (req, res) => {
     try {
         const { nombre, email, nivel, password } = req.body || {};
         const nombreLimpio = typeof nombre === 'string' ? nombre.trim() : '';
@@ -184,7 +184,7 @@ app.post('/api/alumnos', async (req, res) => {
 
         return res.status(201).json({
             exito: true,
-            mensaje: 'Cuenta creada e inscripción recibida. Ya puedes iniciar sesión.',
+            mensaje: 'Alumno inscrito correctamente. Ya puede iniciar sesión.',
             alumno: {
                 id: alumno.id,
                 nombre: alumno.nombre,
@@ -193,8 +193,8 @@ app.post('/api/alumnos', async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Error al crear la cuenta del alumno:', error.message);
-        return res.status(500).json({ exito: false, mensaje: 'No se pudo crear la cuenta. Inténtalo nuevamente.' });
+        console.error('Error al inscribir al alumno desde el panel:', error.message);
+        return res.status(500).json({ exito: false, mensaje: 'No se pudo inscribir al alumno. Inténtalo nuevamente.' });
     }
 });
 

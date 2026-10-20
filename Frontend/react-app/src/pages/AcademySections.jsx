@@ -56,7 +56,7 @@ function AcademySections() {
                 ))}
               </div>
               <p className="program-detail">{program.detail}</p>
-              <a className="button-primary" href="#inscripciones">Consultar e inscribirme <span aria-hidden="true">↗</span></a>
+              <a className="button-primary" href="#contacto">Consultar inscripción <span aria-hidden="true">↗</span></a>
             </article>
           ))}
         </div>

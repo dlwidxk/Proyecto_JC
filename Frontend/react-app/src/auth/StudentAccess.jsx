@@ -87,7 +87,7 @@ function StudentAccess({ sesion, onLogin, onLogout, onNavigate }) {
           </form>
 
           <p className="student-login-help">
-            ¿Aún no tienes cuenta? <a href="?" onClick={(event) => { event.preventDefault(); onNavigate('inicio', 'inscripciones'); }}>Crea tu cuenta al inscribirte.</a>
+            ¿Aún no tienes cuenta? <a href="?" onClick={(event) => { event.preventDefault(); onNavigate('inicio', 'contacto'); }}>Contacta a la academia para gestionar tu inscripción y acceso.</a>
           </p>
           <p className="student-login-help">
             ¿Ya estabas inscrito y no tienes contraseña? <a href="?" onClick={(event) => { event.preventDefault(); onNavigate('inicio', 'contacto'); }}>Escríbenos para activar tu acceso.</a>

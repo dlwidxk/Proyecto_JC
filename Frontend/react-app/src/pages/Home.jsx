@@ -3,19 +3,6 @@ import { apiUrl } from '../services/api';
 import AcademySections from './AcademySections';
 
 function Home() {
-  /* Aquí guardamos los datos de la inscripción */
-  const [formulario, setFormulario] = useState({
-    nombre: '',
-    email: '',
-    nivel: '',
-    password: '',
-    confirmarPassword: '',
-  });
-
-  const [cargando, setCargando] = useState(false);
-  const [mensaje, setMensaje] = useState('');
-  const [tipoMensaje, setTipoMensaje] = useState('');
-
   /* Aquí guardamos los datos del formulario de contacto */
   const [contacto, setContacto] = useState({
     nombre: '',
@@ -28,71 +15,6 @@ function Home() {
   const [enviandoContacto, setEnviandoContacto] = useState(false);
   const [resultadoContacto, setResultadoContacto] = useState('');
   const [errorContacto, setErrorContacto] = useState(false);
-
-  /* Aquí actualizamos los campos de inscripción */
-  function manejarCambio(event) {
-    const { name, value } = event.target;
-
-    setFormulario((anterior) => ({
-      ...anterior,
-      [name]: value,
-    }));
-  }
-
-  /* Aquí enviamos la inscripción al backend */
-  async function manejarEnvio(event) {
-    event.preventDefault();
-    setMensaje('');
-    setTipoMensaje('');
-
-    if (formulario.password !== formulario.confirmarPassword) {
-      setMensaje('Las contraseñas no coinciden.');
-      setTipoMensaje('error');
-      return;
-    }
-
-    setCargando(true);
-
-    try {
-      const datosInscripcion = {
-        nombre: formulario.nombre,
-        email: formulario.email,
-        nivel: formulario.nivel,
-        password: formulario.password,
-      };
-      const respuesta = await fetch(apiUrl('/alumnos'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(datosInscripcion),
-      });
-
-      const data = await respuesta.json();
-
-      if (!respuesta.ok || !data.exito) {
-        throw new Error(data.mensaje || 'No se pudo enviar la inscripción.');
-      }
-
-      setMensaje('Cuenta creada e inscripción recibida. Ya puedes iniciar sesión en el portal de estudiantes.');
-      setTipoMensaje('exito');
-
-      setFormulario({
-        nombre: '',
-        email: '',
-        nivel: '',
-        password: '',
-        confirmarPassword: '',
-      });
-    } catch (error) {
-      setMensaje(
-        error.message || 'No se pudo conectar con el servidor.'
-      );
-      setTipoMensaje('error');
-    } finally {
-      setCargando(false);
-    }
-  }
 
   /* Aquí actualizamos los campos de contacto */
   function manejarCambioContacto(event) {
@@ -295,158 +217,28 @@ function Home() {
           </p>
         </div>
 
-        <a href="#inscripciones" className="button-primary">
-          Quiero inscribirme <span aria-hidden="true">↗</span>
+        <a href="#contacto" className="button-primary">
+          Consultar una inscripción <span aria-hidden="true">↗</span>
         </a>
       </section>
 
-      {/* Aquí va el formulario de inscripción */}
+      {/* La web pública recibe consultas; el alta oficial se hace desde el panel administrativo. */}
       <section
         className="contact-section"
         id="inscripciones"
         aria-labelledby="titulo-inscripciones"
       >
         <span className="section-eyebrow">INSCRIPCIONES</span>
-        <h2 id="titulo-inscripciones">Crea tu cuenta y solicita tu cupo.</h2>
+        <h2 id="titulo-inscripciones">La academia te acompaña en tu inscripción.</h2>
         <p>
-          Inscríbete, crea una contraseña y accede al portal de estudiantes.
+          Nuestro equipo registra a cada nuevo alumno y le entrega su acceso personal al portal.
         </p>
-
-        <form
-          onSubmit={manejarEnvio}
-          style={{
-            display: 'grid',
-            gap: '16px',
-            width: 'min(100%, 480px)',
-            margin: '28px auto 0',
-            textAlign: 'left',
-          }}
-        >
-          <label>
-            Nombre completo
-            <input
-              name="nombre"
-              value={formulario.nombre}
-              onChange={manejarCambio}
-              autoComplete="name"
-              required
-              maxLength={100}
-              placeholder="Escribe tu nombre"
-              style={{
-                display: 'block',
-                width: '100%',
-                marginTop: '8px',
-                padding: '12px',
-                borderRadius: '8px',
-              }}
-            />
-          </label>
-
-          <label>
-            Correo electrónico
-            <input
-              type="email"
-              name="email"
-              value={formulario.email}
-              onChange={manejarCambio}
-              autoComplete="email"
-              required
-              maxLength={150}
-              placeholder="tucorreo@ejemplo.com"
-              style={{
-                display: 'block',
-                width: '100%',
-                marginTop: '8px',
-                padding: '12px',
-                borderRadius: '8px',
-              }}
-            />
-          </label>
-
-          <label>
-            Crea una contraseña
-            <input
-              type="password"
-              name="password"
-              value={formulario.password}
-              onChange={manejarCambio}
-              autoComplete="new-password"
-              minLength={8}
-              maxLength={128}
-              required
-              placeholder="Al menos 8 caracteres"
-              style={{
-                display: 'block',
-                width: '100%',
-                marginTop: '8px',
-                padding: '12px',
-                borderRadius: '8px',
-              }}
-            />
-          </label>
-
-          <label>
-            Confirma tu contraseña
-            <input
-              type="password"
-              name="confirmarPassword"
-              value={formulario.confirmarPassword}
-              onChange={manejarCambio}
-              autoComplete="new-password"
-              minLength={8}
-              maxLength={128}
-              required
-              placeholder="Escribe la contraseña otra vez"
-              style={{
-                display: 'block',
-                width: '100%',
-                marginTop: '8px',
-                padding: '12px',
-                borderRadius: '8px',
-              }}
-            />
-          </label>
-
-          <label>
-            Selecciona el nivel de tu interés:
-            <select
-              name="nivel"
-              value={formulario.nivel}
-              onChange={manejarCambio}
-              required
-              style={{
-                display: 'block',
-                width: '100%',
-                marginTop: '8px',
-                padding: '12px',
-                borderRadius: '8px',
-              }}
-            >
-              <option value="">Selecciona el nivel de tu interés</option>
-              <option value="12-14">De 12 a 14 años</option>
-              <option value="15-17">De 15 a 17 años</option>
-            </select>
-          </label>
-
-          {mensaje && (
-            <p
-              role="status"
-              style={{
-                color: tipoMensaje === 'error' ? '#ff7777' : '#75d9a0',
-              }}
-            >
-              {mensaje}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            className="button-primary"
-            disabled={cargando}
-          >
-            {cargando ? 'Creando cuenta...' : 'Crear cuenta e inscribirme'}
-          </button>
-        </form>
+        <div className="enrollment-actions">
+          <a className="button-primary" href="https://wa.me/593960203174?text=Hola%2C%20quiero%20consultar%20por%20una%20inscripci%C3%B3n" target="_blank" rel="noreferrer">
+            Consultar por WhatsApp <span aria-hidden="true">↗</span>
+          </a>
+          <a className="button-secondary" href="#contacto">Enviar un mensaje</a>
+        </div>
       </section>
 
       {/* Aquí va el formulario de contacto */}

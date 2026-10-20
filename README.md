@@ -8,7 +8,7 @@ Sitio web de una academia online de Matemáticas, Física y Cálculo. El fronten
 - `Backend`: API de Express, conexión con MongoDB y endpoint del chatbot.
 - `Frontend/HTML`: versión estática anterior conservada como referencia.
 
-El formulario de inscripción también crea la cuenta de estudiante. Las contraseñas se guardan con hash en MongoDB; no se almacena la contraseña original. Las cuentas antiguas que no tienen contraseña no se activan automáticamente: deben solicitar acceso a la academia.
+La administradora inscribe a los estudiantes desde el panel y les asigna una contraseña inicial. Las contraseñas se guardan con hash en MongoDB; no se almacena la contraseña original. Las cuentas antiguas que no tienen contraseña se activan desde ese mismo panel.
 
 ## Ejecutar localmente
 

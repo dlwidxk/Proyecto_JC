@@ -43,3 +43,22 @@ export async function asignarContrasenaAlumno(alumnoId, password, token) {
     throw new Error(datos.mensaje || 'No se pudo actualizar la contraseña.');
   }
 }
+
+// El formulario administrativo manda el token para que solo la academia pueda dar de alta cuentas.
+export async function crearAlumnoDesdePanel(datosAlumno, token) {
+  const respuesta = await fetch(apiUrl('/admin/alumnos'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(datosAlumno),
+  });
+  const datos = await respuesta.json();
+
+  if (!respuesta.ok || !datos.exito) {
+    throw new Error(datos.mensaje || 'No se pudo inscribir al alumno.');
+  }
+
+  return datos.alumno;
+}
