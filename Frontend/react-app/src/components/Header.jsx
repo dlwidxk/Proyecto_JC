@@ -22,9 +22,14 @@ function Header() {
         <a href="#contacto">Contacto</a>
       </nav>
 
-      <a className="header-button" href="#cursos">
-        Explorar cursos <span aria-hidden="true">↗</span>
-      </a>
+      <div className="header-actions">
+        <a className="header-button header-button-student" href="#acceso-estudiantes">
+          Acceso estudiantes
+        </a>
+        <a className="header-button header-button-staff" href="#area-administrativa">
+          Docentes y admin
+        </a>
+      </div>
     </header>
   );
 }

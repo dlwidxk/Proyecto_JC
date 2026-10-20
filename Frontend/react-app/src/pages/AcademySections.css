@@ -1,6 +1,8 @@
 .academy-section {
   padding: 90px 9%;
-  background: #0a0a0f;
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(0, 168, 255, 0.07), transparent 50%),
+    #0a0a0f;
   scroll-margin-top: 100px;
 }
 
@@ -18,19 +20,42 @@
 
 .program-card,
 .about-card {
+  position: relative;
+  overflow: hidden;
   min-width: 0;
   padding: 30px;
-  border: 1px solid #252d3a;
-  border-radius: 18px;
-  background: linear-gradient(145deg, #141923, #10131b);
+  border: 1px solid rgba(130, 155, 190, 0.2);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(21, 30, 43, 0.96), rgba(13, 17, 26, 0.98));
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
 
-.program-age { color: #58c5ff; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.program-card::before,
+.about-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #00a8ff, #7c6dff, transparent 85%);
+  content: '';
+  opacity: 0.8;
+}
+
+.program-card:hover,
+.about-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 168, 255, 0.48);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.28);
+}
+
+.program-age { display: inline-flex; padding: 7px 11px; border: 1px solid rgba(0, 168, 255, 0.24); border-radius: 999px; color: #78d1ff; background: rgba(0, 168, 255, 0.08); font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .program-card h3,
 .about-card h3 { margin: 12px 0; color: #f8f9fa; font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; }
 .program-frequency { color: #c5d0df; font-size: 0.9rem; }
 .program-subjects { display: grid; gap: 12px; margin: 24px 0; }
-.program-subject { padding: 15px; border-radius: 12px; background: rgba(0, 168, 255, 0.06); }
+.program-subject { padding: 15px; border: 1px solid rgba(0, 168, 255, 0.1); border-left: 3px solid rgba(0, 168, 255, 0.55); border-radius: 12px; background: rgba(0, 168, 255, 0.045); }
 .program-subject h4 { margin: 0 0 5px; color: #73cfff; }
 .program-subject p,
 .program-detail,
@@ -39,28 +64,35 @@
 .program-card .button-primary { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
 
 .included-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 25px; max-width: 1000px; margin: 36px auto 0; padding: 0; list-style: none; }
-.included-list li { display: flex; gap: 10px; color: #c5d0df; line-height: 1.6; }
+.included-list li { display: flex; gap: 10px; padding: 13px 15px; border: 1px solid rgba(130, 155, 190, 0.15); border-radius: 12px; color: #c5d0df; background: rgba(16, 20, 30, 0.7); line-height: 1.6; }
 .included-list li span { color: #58c5ff; font-weight: 800; }
 
-.about-section { background: #0e1119; }
+.about-section { background: radial-gradient(ellipse at 50% 100%, rgba(124, 109, 255, 0.08), transparent 55%), #0e1119; }
 .about-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .about-card { padding: 25px; }
 .about-card .benefit-icon { margin-bottom: 17px; }
 .about-values ul { display: grid; gap: 10px; padding-left: 20px; color: #aeb8c8; line-height: 1.5; }
 
-.pricing-section { background: #0a0a0f; }
+.pricing-section { background: radial-gradient(ellipse at 50% 100%, rgba(0, 168, 255, 0.06), transparent 58%), #0a0a0f; }
 .pricing-table-wrap { max-width: 900px; margin: 0 auto; overflow-x: auto; border: 1px solid #293548; border-radius: 16px; }
 .pricing-table { width: 100%; border-collapse: collapse; text-align: left; }
 .pricing-table th, .pricing-table td { padding: 18px 22px; border-bottom: 1px solid #252d3a; }
 .pricing-table thead { color: #80d5ff; background: #111a27; }
 .pricing-table tbody th { color: #f8f9fa; }
 .pricing-table td { color: #c5d0df; }
+.pricing-table tbody tr { transition: background-color 180ms ease; }
+.pricing-table tbody tr:hover { background: rgba(0, 168, 255, 0.045); }
 .pricing-table tbody tr:last-child th, .pricing-table tbody tr:last-child td { border-bottom: 0; }
 .pricing-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; max-width: 900px; margin: 24px auto; }
 .pricing-notes > div { padding: 21px; border: 1px solid #252d3a; border-radius: 14px; background: #10141e; }
 .pricing-notes h3 { margin: 0 0 8px; color: #f8f9fa; font-size: 1rem; }
 .pricing-notes p { margin: 0; color: #aeb8c8; font-size: 0.9rem; line-height: 1.75; }
 .pricing-cta { display: flex; width: fit-content; gap: 8px; margin: 28px auto 0; text-decoration: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .program-card, .about-card, .pricing-table tbody tr { transition: none; }
+  .program-card:hover, .about-card:hover { transform: none; }
+}
 
 @media (max-width: 850px) {
   .academy-section { padding: 75px 6%; }

@@ -5,6 +5,8 @@ const dns = require('dns');
 const Alumno = require('./models/Alumno'); 
 const Contacto = require('./models/Contacto'); 
 const jwt = require('jsonwebtoken');
+const { randomBytes, scrypt: scryptCallback, timingSafeEqual } = require('crypto');
+const { promisify } = require('util');
  
 require('dotenv').config(); 
  
@@ -13,6 +15,22 @@ dns.setServers(['1.1.1.1', '8.8.8.8']);
  
 const app = express(); 
 const PORT = process.env.PORT || 2323; 
+const scrypt = promisify(scryptCallback);
+
+async function crearHashContrasena(contrasena) {
+    const salt = randomBytes(16).toString('hex');
+    const claveDerivada = await scrypt(contrasena, salt, 64);
+    return `${salt}:${claveDerivada.toString('hex')}`;
+}
+
+async function verificarContrasena(contrasena, hashGuardado) {
+    const [salt, hashHex] = (hashGuardado || '').split(':');
+    if (!salt || !hashHex) return false;
+
+    const claveEsperada = Buffer.from(hashHex, 'hex');
+    const claveRecibida = await scrypt(contrasena, salt, claveEsperada.length);
+    return claveEsperada.length > 0 && timingSafeEqual(claveEsperada, claveRecibida);
+}
  
 // En producción limita las llamadas del navegador al sitio publicado.
 const origenesConfigurados = (process.env.FRONTEND_URL || '')
@@ -70,6 +88,25 @@ const verificarToken = (req, res, next) => {
         });
     }
 };
+
+const verificarTokenAlumno = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ exito: false, mensaje: 'Inicia sesión para continuar.' });
+    }
+
+    try {
+        const datos = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
+        if (datos.tipo !== 'alumno' || !datos.sub) {
+            return res.status(403).json({ exito: false, mensaje: 'Este acceso es solo para estudiantes.' });
+        }
+
+        req.alumnoId = datos.sub;
+        return next();
+    } catch (error) {
+        return res.status(401).json({ exito: false, mensaje: 'La sesión venció. Inicia sesión nuevamente.' });
+    }
+};
 // Conectar con MongoDB 
 mongoose.connect(process.env.MONGODB_URI) 
     .then(() => { 
@@ -96,7 +133,7 @@ app.get('/', (req, res) => {
 app.get('/api/alumnos', verificarToken, async (req, res) => {
     try {
         const alumnos = await Alumno.find()
-            .select('nombre nivel materias estado');
+            .select('nombre email nivel materias estado');
 
         res.json({
             exito: true,
@@ -112,26 +149,106 @@ app.get('/api/alumnos', verificarToken, async (req, res) => {
     }
 });
 
-// Crear un alumno 
-app.post('/api/alumnos', async (req, res) => { 
-    try { 
-        const alumno = new Alumno(req.body); 
- 
-        const alumnoGuardado = await alumno.save(); 
- 
-        res.status(201).json({ 
-            exito: true, 
-            alumno: alumnoGuardado 
-        }); 
- 
-    } catch (error) { 
-        res.status(400).json({ 
-            exito: false, 
-            mensaje: 'No se pudo guardar el alumno', 
-            error: error.message 
-        }); 
-    } 
-}); 
+// Crear cuenta de alumno e inscripción.
+app.post('/api/alumnos', async (req, res) => {
+    try {
+        const { nombre, email, nivel, password } = req.body || {};
+        const nombreLimpio = typeof nombre === 'string' ? nombre.trim() : '';
+        const emailLimpio = typeof email === 'string' ? email.trim().toLowerCase() : '';
+
+        if (!nombreLimpio || nombreLimpio.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpio)) {
+            return res.status(400).json({ exito: false, mensaje: 'Revisa tu nombre y correo electrónico.' });
+        }
+        if (!['12-14', '15-17'].includes(nivel)) {
+            return res.status(400).json({ exito: false, mensaje: 'Selecciona uno de los niveles disponibles.' });
+        }
+        if (typeof password !== 'string' || password.length < 8 || password.length > 128) {
+            return res.status(400).json({ exito: false, mensaje: 'La contraseña debe tener entre 8 y 128 caracteres.' });
+        }
+
+        const alumnoExistente = await Alumno.findOne({ email: emailLimpio });
+        if (alumnoExistente) {
+            return res.status(409).json({
+                exito: false,
+                mensaje: 'Ya existe una inscripción con ese correo. Si ya eres alumno, inicia sesión o contacta a la academia para activar tu acceso.'
+            });
+        }
+
+        const passwordHash = await crearHashContrasena(password);
+        const alumno = await Alumno.create({
+            nombre: nombreLimpio,
+            email: emailLimpio,
+            nivel,
+            passwordHash
+        });
+
+        return res.status(201).json({
+            exito: true,
+            mensaje: 'Cuenta creada e inscripción recibida. Ya puedes iniciar sesión.',
+            alumno: {
+                id: alumno.id,
+                nombre: alumno.nombre,
+                email: alumno.email,
+                nivel: alumno.nivel
+            }
+        });
+    } catch (error) {
+        console.error('Error al crear la cuenta del alumno:', error.message);
+        return res.status(500).json({ exito: false, mensaje: 'No se pudo crear la cuenta. Inténtalo nuevamente.' });
+    }
+});
+
+app.post('/api/alumnos/login', async (req, res) => {
+    const { email, password } = req.body || {};
+    if (typeof email !== 'string' || typeof password !== 'string' || !email.trim() || !password) {
+        return res.status(400).json({ exito: false, mensaje: 'Escribe tu correo y contraseña.' });
+    }
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({ exito: false, mensaje: 'El acceso estudiantil no está configurado.' });
+    }
+
+    try {
+        const alumno = await Alumno.findOne({ email: email.trim().toLowerCase() }).select('+passwordHash');
+        const contrasenaValida = alumno && await verificarContrasena(password, alumno.passwordHash);
+        if (!contrasenaValida) {
+            return res.status(401).json({ exito: false, mensaje: 'Correo o contraseña incorrectos.' });
+        }
+
+        const token = jwt.sign(
+            { sub: alumno.id, tipo: 'alumno' },
+            process.env.JWT_SECRET,
+            { expiresIn: '12h' }
+        );
+        return res.json({
+            exito: true,
+            token,
+            alumno: {
+                id: alumno.id,
+                nombre: alumno.nombre,
+                email: alumno.email,
+                nivel: alumno.nivel,
+                materias: alumno.materias,
+                estado: alumno.estado
+            }
+        });
+    } catch (error) {
+        console.error('Error en el inicio de sesión estudiantil:', error.message);
+        return res.status(500).json({ exito: false, mensaje: 'No se pudo iniciar sesión.' });
+    }
+});
+
+app.get('/api/alumnos/me', verificarTokenAlumno, async (req, res) => {
+    try {
+        const alumno = await Alumno.findById(req.alumnoId)
+            .select('nombre email nivel materias estado');
+        if (!alumno) {
+            return res.status(404).json({ exito: false, mensaje: 'No se encontró tu cuenta.' });
+        }
+        return res.json({ exito: true, alumno });
+    } catch (error) {
+        return res.status(500).json({ exito: false, mensaje: 'No se pudo consultar tu cuenta.' });
+    }
+});
 
 // Guardar mensaje de contacto 
 app.post('/api/contacto', async (req, res) => { 

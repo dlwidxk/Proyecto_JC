@@ -8,6 +8,8 @@ function Home() {
     nombre: '',
     email: '',
     nivel: '',
+    password: '',
+    confirmarPassword: '',
   });
 
   const [cargando, setCargando] = useState(false);
@@ -42,15 +44,28 @@ function Home() {
     event.preventDefault();
     setMensaje('');
     setTipoMensaje('');
+
+    if (formulario.password !== formulario.confirmarPassword) {
+      setMensaje('Las contraseñas no coinciden.');
+      setTipoMensaje('error');
+      return;
+    }
+
     setCargando(true);
 
     try {
+      const datosInscripcion = {
+        nombre: formulario.nombre,
+        email: formulario.email,
+        nivel: formulario.nivel,
+        password: formulario.password,
+      };
       const respuesta = await fetch(apiUrl('/alumnos'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formulario),
+        body: JSON.stringify(datosInscripcion),
       });
 
       const data = await respuesta.json();
@@ -59,13 +74,15 @@ function Home() {
         throw new Error(data.mensaje || 'No se pudo enviar la inscripción.');
       }
 
-      setMensaje('¡Inscripción enviada correctamente!');
+      setMensaje('Cuenta creada e inscripción recibida. Ya puedes iniciar sesión en el portal de estudiantes.');
       setTipoMensaje('exito');
 
       setFormulario({
         nombre: '',
         email: '',
         nivel: '',
+        password: '',
+        confirmarPassword: '',
       });
     } catch (error) {
       setMensaje(
@@ -290,9 +307,9 @@ function Home() {
         aria-labelledby="titulo-inscripciones"
       >
         <span className="section-eyebrow">INSCRIPCIONES</span>
-        <h2 id="titulo-inscripciones">Da el siguiente paso.</h2>
+        <h2 id="titulo-inscripciones">Crea tu cuenta y solicita tu cupo.</h2>
         <p>
-          Completa tus datos y selecciona el nivel de tu interés.
+          Inscríbete, crea una contraseña y accede al portal de estudiantes.
         </p>
 
         <form
@@ -347,6 +364,50 @@ function Home() {
           </label>
 
           <label>
+            Crea una contraseña
+            <input
+              type="password"
+              name="password"
+              value={formulario.password}
+              onChange={manejarCambio}
+              autoComplete="new-password"
+              minLength={8}
+              maxLength={128}
+              required
+              placeholder="Al menos 8 caracteres"
+              style={{
+                display: 'block',
+                width: '100%',
+                marginTop: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+              }}
+            />
+          </label>
+
+          <label>
+            Confirma tu contraseña
+            <input
+              type="password"
+              name="confirmarPassword"
+              value={formulario.confirmarPassword}
+              onChange={manejarCambio}
+              autoComplete="new-password"
+              minLength={8}
+              maxLength={128}
+              required
+              placeholder="Escribe la contraseña otra vez"
+              style={{
+                display: 'block',
+                width: '100%',
+                marginTop: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+              }}
+            />
+          </label>
+
+          <label>
             Selecciona el nivel de tu interés:
             <select
               name="nivel"
@@ -383,7 +444,7 @@ function Home() {
             className="button-primary"
             disabled={cargando}
           >
-            {cargando ? 'Enviando inscripción...' : 'Enviar inscripción'}
+            {cargando ? 'Creando cuenta...' : 'Crear cuenta e inscribirme'}
           </button>
         </form>
       </section>

@@ -14,6 +14,12 @@ const alumnoSchema = new mongoose.Schema({
         lowercase: true
     },
 
+    passwordHash: {
+        type: String,
+        required: true,
+        select: false
+    },
+
     nivel: {
         type: String,
         required: true,

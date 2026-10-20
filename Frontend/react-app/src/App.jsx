@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Login from './auth/Login';
+import StudentAccess from './auth/StudentAccess';
 import { obtenerAlumnos } from './services/alumnosService';
 import { marcarContactoLeido, obtenerContactos } from './services/contactosService';
 import './App.css';
@@ -16,6 +17,7 @@ function App() {
   const [cargandoAlumnos, setCargandoAlumnos] = useState(false);
   const [errorAlumnos, setErrorAlumnos] = useState('');
   const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [sesionEstudiante, setSesionEstudiante] = useState(null);
 
   async function consultarDatosAdmin(token) {
     setCargandoAlumnos(true);
@@ -65,6 +67,12 @@ function App() {
       <Header />
 
       <Home />
+
+      <StudentAccess
+        sesion={sesionEstudiante}
+        onLogin={setSesionEstudiante}
+        onLogout={() => setSesionEstudiante(null)}
+      />
 
       <section
         className="contact-section"

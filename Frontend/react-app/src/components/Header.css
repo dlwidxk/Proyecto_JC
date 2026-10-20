@@ -53,6 +53,12 @@
   color: #00a8ff;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
 .header-button {
   padding: 11px 17px;
   border: 1px solid #00a8ff;
@@ -63,6 +69,7 @@
   font-weight: 600;
   text-decoration: none;
   transition: background 0.25s ease, transform 0.25s ease;
+  white-space: nowrap;
 }
 
 .header-button:hover {
@@ -70,7 +77,11 @@
   transform: translateY(-2px);
 }
 
-@media (max-width: 850px) {
+.header-button-student { border-color: rgba(0, 168, 255, 0.45); background: rgba(0, 168, 255, 0.08); }
+.header-button-staff { border-color: #00a8ff; color: #06111b; background: #58c5ff; }
+.header-button-staff:hover { color: #fff; background: #007fc2; }
+
+@media (max-width: 1050px) {
   .site-header {
     flex-wrap: wrap;
     padding: 14px 5%;
@@ -83,6 +94,10 @@
     flex-wrap: wrap;
     gap: 18px;
   }
+
+  .header-actions { order: 2; margin-left: auto; }
+  .main-nav { order: 3; }
+  .header-button { padding: 9px 12px; font-size: 0.78rem; }
 }
 
 @media (max-width: 480px) {
@@ -95,12 +110,11 @@
     font-size: 0.95rem;
   }
 
-  .header-button {
-    padding: 9px 11px;
-    font-size: 0.78rem;
-  }
+  .header-actions { order: 3; width: 100%; }
+  .header-button { flex: 1; padding: 10px 8px; font-size: 0.72rem; text-align: center; }
 
   .main-nav {
+    order: 2;
     gap: 14px;
   }
 

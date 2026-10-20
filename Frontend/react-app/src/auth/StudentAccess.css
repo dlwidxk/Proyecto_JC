@@ -1,0 +1,51 @@
+.student-access-section {
+  display: grid;
+  justify-items: center;
+  padding: 82px 7%;
+  scroll-margin-top: 100px;
+  background: radial-gradient(ellipse at 50% 20%, rgba(0, 168, 255, 0.1), transparent 58%), #10141e;
+}
+
+.student-login-card,
+.student-dashboard-card {
+  width: min(100%, 560px);
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid rgba(92, 126, 170, 0.32);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(20, 29, 43, 0.98), rgba(10, 14, 23, 0.98));
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.28);
+}
+
+.student-login-card h2,
+.student-dashboard-card h2 {
+  margin: 15px 0 10px;
+  color: #f8f9fa;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.7rem, 4vw, 2.25rem);
+  letter-spacing: -0.04em;
+}
+
+.student-login-card > p,
+.student-dashboard-card > p { color: #aeb8c8; line-height: 1.7; }
+.student-login-form { display: grid; gap: 16px; margin-top: 25px; }
+.student-login-form label { display: grid; gap: 8px; color: #dce5f1; font-size: 0.9rem; font-weight: 600; }
+.student-login-form input { box-sizing: border-box; width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid #303b4d; border-radius: 9px; color: #f8f9fa; background: #0e1420; font: inherit; }
+.student-login-form input:focus { border-color: #00a8ff; outline: 3px solid rgba(0, 168, 255, 0.13); }
+.student-login-form input::placeholder { color: #78869b; }
+.student-login-form .button-primary { width: 100%; min-height: 48px; margin-top: 4px; }
+.student-login-error { margin: 0; color: #ff8787; font-size: 0.9rem; }
+.student-login-help { margin: 18px 0 0; font-size: 0.84rem; }
+.student-login-help a { color: #80d5ff; }
+
+.student-program-card { margin: 24px 0; padding: 22px; border: 1px solid rgba(0, 168, 255, 0.2); border-radius: 15px; background: rgba(0, 168, 255, 0.055); }
+.student-program-card > span { color: #80d5ff; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.student-program-card h3 { margin: 11px 0; color: #f8f9fa; }
+.student-program-card p { color: #aeb8c8; font-size: 0.9rem; line-height: 1.65; }
+.student-course-link { color: #80d5ff; font-weight: 600; text-decoration: none; }
+.student-course-link:hover { text-decoration: underline; }
+.student-logout { display: block; margin-top: 25px; }
+
+@media (max-width: 480px) {
+  .student-access-section { padding: 58px 5%; }
+  .student-program-card { padding: 18px; }
+}
