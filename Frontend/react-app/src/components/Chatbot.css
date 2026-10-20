@@ -1,0 +1,145 @@
+/* Aquí van los estilos de la ventana del chatbot. */
+
+.chatbot {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  font-family: inherit;
+}
+
+.chatbot-boton {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: #174ea6;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.chatbot-boton:hover {
+  transform: scale(1.06);
+}
+
+.chatbot-ventana {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 460px;
+  max-height: calc(100vh - 115px);
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.16);
+}
+
+.chatbot-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  background: #174ea6;
+  color: white;
+}
+
+.chatbot-cabecera h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.chatbot-cabecera p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.chatbot-cerrar {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.chatbot-mensajes {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.chatbot-mensaje {
+  max-width: 85%;
+  padding: 11px 13px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.chatbot-mensaje.bot {
+  align-self: flex-start;
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.chatbot-mensaje.usuario {
+  align-self: flex-end;
+  background: #174ea6;
+  color: white;
+}
+
+.chatbot-formulario {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.chatbot-formulario input {
+  width: 0;
+  min-width: 0;
+  flex: 1;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  outline: none;
+}
+
+.chatbot-formulario input:focus {
+  border-color: #174ea6;
+}
+
+.chatbot-formulario button {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: #174ea6;
+  color: white;
+  cursor: pointer;
+}
+
+.chatbot-formulario button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .chatbot {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .chatbot-ventana {
+    width: min(350px, calc(100vw - 28px));
+    height: min(460px, calc(100dvh - 100px));
+  }
+}

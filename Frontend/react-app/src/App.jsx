@@ -6,6 +6,7 @@ import Login from './auth/Login';
 import { obtenerAlumnos } from './services/alumnosService';
 import './App.css';
 import './pages/Home.css';
+import Chatbot from './components/Chatbot';
 
 function App() {
   const [sesion, setSesion] = useState(null);
@@ -155,6 +156,7 @@ function App() {
           Todos los derechos reservados.
         </p>
       </footer>
+            <Chatbot />
     </>
   );
 }
