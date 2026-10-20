@@ -18,6 +18,7 @@ function Home() {
   const [contacto, setContacto] = useState({
     nombre: '',
     email: '',
+    telefono: '',
     nivel: '',
     mensaje: '',
   });
@@ -115,6 +116,7 @@ function Home() {
       setContacto({
         nombre: '',
         email: '',
+        telefono: '',
         nivel: '',
         mensaje: '',
       });
@@ -450,6 +452,26 @@ function Home() {
           </label>
 
           <label>
+            Teléfono (opcional)
+            <input
+              type="tel"
+              name="telefono"
+              value={contacto.telefono}
+              onChange={manejarCambioContacto}
+              autoComplete="tel"
+              maxLength={30}
+              placeholder="+593 96 000 0000"
+              style={{
+                display: 'block',
+                width: '100%',
+                marginTop: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+              }}
+            />
+          </label>
+
+          <label>
             Selecciona el nivel de tu interés:
             <select
               name="nivel"
@@ -511,6 +533,15 @@ function Home() {
             {enviandoContacto ? 'Enviando mensaje...' : 'Enviar mensaje'}
           </button>
         </form>
+
+        <div className="contact-info">
+          <h3>También puedes escribirnos</h3>
+          <a href="mailto:info@formulaexacta.com">info@formulaexacta.com</a>
+          <a href="https://wa.me/593960203174" target="_blank" rel="noreferrer">
+            WhatsApp: +593 96 020 3174
+          </a>
+          <p>Instagram, Facebook y TikTok: @formulaexacta</p>
+        </div>
       </section>
     </main>
   );

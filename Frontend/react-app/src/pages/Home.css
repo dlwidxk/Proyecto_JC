@@ -431,6 +431,20 @@
   margin-bottom: 25px;
 }
 
+.contact-info {
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  margin-top: 28px;
+  color: #aeb8c8;
+  font-size: 0.9rem;
+}
+
+.contact-info h3 { margin: 0 0 4px; color: #f8f9fa; }
+.contact-info a { color: #80d5ff; text-decoration: none; }
+.contact-info a:hover { text-decoration: underline; }
+.contact-info p { margin: 0; }
+
 /* Aquí va el panel que contiene cada formulario */
 
 .contact-section form {
