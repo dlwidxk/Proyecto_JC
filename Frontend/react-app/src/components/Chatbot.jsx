@@ -35,12 +35,8 @@ function Chatbot() {
     setCargando(true);
 
     try {
-      // Pedimos la respuesta al backend conectado con la IA.
-      const historial = mensajes.slice(-8).map((item) => ({
-        role: item.tipo === 'usuario' ? 'user' : 'assistant',
-        content: item.texto,
-      }));
-      const respuesta = await enviarPreguntaChatbot(texto, historial);
+      // Consultamos las respuestas guardadas por la academia en su base de conocimiento.
+      const respuesta = await enviarPreguntaChatbot(texto);
 
       setMensajes((anteriores) => [
         ...anteriores,

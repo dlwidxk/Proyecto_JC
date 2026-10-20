@@ -1,6 +1,6 @@
 # Fórmula Exacta
 
-Sitio web de una academia online de Matemáticas, Física y Cálculo. El frontend está desarrollado con React y Vite; el backend usa Node.js, Express y MongoDB Atlas. El chatbot usa la API de OpenAI y responde con información propia de la academia.
+Sitio web de una academia online de Matemáticas, Física y Cálculo. El frontend está desarrollado con React y Vite; el backend usa Node.js, Express y MongoDB Atlas. El chatbot consulta una base de conocimiento propia, separada de los datos de alumnos y contactos.
 
 ## Estructura
 
@@ -22,7 +22,7 @@ La administradora inscribe a los estudiantes desde el panel y les asigna una con
 GitHub Pages publica el frontend; no ejecuta Express ni conecta directamente con MongoDB. Para habilitar formularios, login y chatbot en internet:
 
 1. Publica `Backend` en un servicio que ejecute Node.js 22 o posterior.
-2. Configura en ese servicio las variables de `Backend/.env.example`, usando valores secretos reales. La clave de OpenAI va únicamente en el backend; nunca en una variable `VITE_*`.
+2. Configura en ese servicio las variables de `Backend/.env.example`, usando valores secretos reales. `CHATBOT_DB_NAME` define la base separada para el conocimiento del chatbot; al iniciar, el backend carga allí los datos iniciales de cursos, precios y contacto.
 3. En MongoDB Atlas, autoriza la salida de red del servicio donde alojes el backend. La IP de tu laptop solo sirve para desarrollo. Usa un usuario de base de datos con permisos limitados y guarda la URI como variable secreta.
 4. En GitHub abre **Settings → Secrets and variables → Actions → Variables** y agrega `VITE_API_URL` con la URL pública del backend terminada en `/api` (por ejemplo, `https://tu-api.example.com/api`).
 5. En **Settings → Pages**, selecciona **GitHub Actions** como método de publicación.
