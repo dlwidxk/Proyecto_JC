@@ -338,6 +338,29 @@ app.get('/api/admin/alumnos', verificarToken, async (req, res) => {
     }
 });
 
+app.put('/api/admin/alumnos/:id/password', verificarToken, async (req, res) => {
+    const { password } = req.body || {};
+    if (typeof password !== 'string' || password.length < 8 || password.length > 128) {
+        return res.status(400).json({
+            exito: false,
+            mensaje: 'La contraseña debe tener entre 8 y 128 caracteres.'
+        });
+    }
+
+    try {
+        const alumno = await Alumno.findById(req.params.id);
+        if (!alumno) {
+            return res.status(404).json({ exito: false, mensaje: 'No se encontró el alumno.' });
+        }
+
+        alumno.passwordHash = await crearHashContrasena(password);
+        await alumno.save();
+        return res.json({ exito: true, mensaje: 'Contraseña actualizada correctamente.' });
+    } catch (error) {
+        return res.status(400).json({ exito: false, mensaje: 'No se pudo actualizar la contraseña.' });
+    }
+});
+
 
 // Inicio de sesión del administrador
 app.post('/api/admin/login', (req, res) => {

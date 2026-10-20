@@ -52,9 +52,9 @@ function Login({ onLogin }) {
 
   return (
     <section className="contact-section">
-      <span className="section-eyebrow">ÁREA ADMINISTRATIVA</span>
+      <span className="section-eyebrow">ACCESO PARA DOCENTES Y ADMINISTRACIÓN</span>
       <h2>Iniciar sesión</h2>
-      <p>Accede con tus credenciales de administrador.</p>
+      <p>Accede con las credenciales institucionales asignadas por la academia.</p>
 
       <form
         onSubmit={manejarLogin}

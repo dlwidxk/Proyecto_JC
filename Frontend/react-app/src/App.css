@@ -41,6 +41,10 @@
 .admin-table-wrap td { min-width: 100px; }
 .admin-error { color: #ff7777; }
 .admin-read-button { padding: 7px 10px; border: 1px solid #00a8ff; border-radius: 8px; color: #c9efff; background: rgba(0, 168, 255, 0.08); cursor: pointer; white-space: nowrap; }
+.admin-credential-message { color: #9edfff; font-size: 0.88rem; }
+.admin-password-control { display: flex; gap: 7px; min-width: 240px; }
+.admin-password-control input { width: 145px; padding: 8px; border: 1px solid #303b4d; border-radius: 7px; color: #f8f9fa; background: #0e1420; }
+.admin-password-control button { padding: 8px 10px; border: 0; border-radius: 7px; color: #06111b; background: #58c5ff; font-weight: 700; cursor: pointer; }
 
 .site-footer p {
   margin: 0;

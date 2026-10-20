@@ -27,3 +27,19 @@ export async function obtenerAlumnos(token) {
 
   return data.alumnos;
 }
+
+export async function asignarContrasenaAlumno(alumnoId, password, token) {
+  const respuesta = await fetch(apiUrl(`/admin/alumnos/${alumnoId}/password`), {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ password }),
+  });
+  const datos = await respuesta.json();
+
+  if (!respuesta.ok || !datos.exito) {
+    throw new Error(datos.mensaje || 'No se pudo actualizar la contraseña.');
+  }
+}

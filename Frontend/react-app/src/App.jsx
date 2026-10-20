@@ -1,39 +1,63 @@
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Login from './auth/Login';
 import StudentAccess from './auth/StudentAccess';
-import { obtenerAlumnos } from './services/alumnosService';
+import { asignarContrasenaAlumno, obtenerAlumnos } from './services/alumnosService';
 import { marcarContactoLeido, obtenerContactos } from './services/contactosService';
 import './App.css';
 import './pages/Home.css';
 import Chatbot from './components/Chatbot';
 
+const paginas = new Set(['inicio', 'student-login', 'student-dashboard', 'staff-login', 'staff-dashboard']);
+
+function leerPagina() {
+  const solicitada = new URLSearchParams(window.location.search).get('pagina') || 'inicio';
+  return paginas.has(solicitada) ? solicitada : 'inicio';
+}
+
 function App() {
+  const [pagina, setPagina] = useState(leerPagina);
   const [sesion, setSesion] = useState(null);
   const [alumnos, setAlumnos] = useState([]);
   const [contactos, setContactos] = useState([]);
-  const [cargandoAlumnos, setCargandoAlumnos] = useState(false);
-  const [errorAlumnos, setErrorAlumnos] = useState('');
-  const [mostrarLogin, setMostrarLogin] = useState(false);
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState('');
+  const [credenciales, setCredenciales] = useState({});
+  const [mensajeCredenciales, setMensajeCredenciales] = useState('');
   const [sesionEstudiante, setSesionEstudiante] = useState(null);
 
-  async function consultarDatosAdmin(token) {
-    setCargandoAlumnos(true);
-    setErrorAlumnos('');
+  useEffect(() => {
+    const sincronizarPagina = () => setPagina(leerPagina());
+    window.addEventListener('popstate', sincronizarPagina);
+    return () => window.removeEventListener('popstate', sincronizarPagina);
+  }, []);
 
+  function navegar(destino, ancla) {
+    const url = new URL(window.location.href);
+    if (destino === 'inicio') url.searchParams.delete('pagina');
+    else url.searchParams.set('pagina', destino);
+    window.history.pushState({}, '', `${url.pathname}${url.search}${url.hash}`);
+    setPagina(destino);
+    window.setTimeout(() => {
+      if (ancla) document.getElementById(ancla)?.scrollIntoView({ behavior: 'smooth' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
+  }
+
+  async function consultarDatosAdmin(token) {
+    setCargando(true);
+    setError('');
     try {
       const [resultadoAlumnos, resultadoContactos] = await Promise.all([
-        obtenerAlumnos(token),
-        obtenerContactos(token),
+        obtenerAlumnos(token), obtenerContactos(token),
       ]);
       setAlumnos(resultadoAlumnos);
       setContactos(resultadoContactos);
-    } catch (error) {
-      setErrorAlumnos(error.message);
+    } catch (consultaError) {
+      setError(consultaError.message);
     } finally {
-      setCargandoAlumnos(false);
+      setCargando(false);
     }
   }
 
@@ -43,137 +67,148 @@ function App() {
       setContactos((anteriores) => anteriores.map((contacto) => (
         contacto._id === actualizado._id ? actualizado : contacto
       )));
-    } catch (error) {
-      setErrorAlumnos(error.message);
+    } catch (consultaError) {
+      setError(consultaError.message);
     }
   }
 
-  function iniciarSesion(datos) {
+  async function guardarContrasena(alumnoId) {
+    const password = credenciales[alumnoId] || '';
+    setMensajeCredenciales('');
+    try {
+      await asignarContrasenaAlumno(alumnoId, password, sesion.token);
+      setCredenciales((anteriores) => ({ ...anteriores, [alumnoId]: '' }));
+      setMensajeCredenciales('Contraseña actualizada. El estudiante ya puede iniciar sesión.');
+    } catch (saveError) {
+      setMensajeCredenciales(saveError.message);
+    }
+  }
+
+  function iniciarSesionAdmin(datos) {
     setSesion(datos);
-    setMostrarLogin(false);
+    navegar('staff-dashboard');
     consultarDatosAdmin(datos.token);
   }
 
-  function cerrarSesion() {
+  function cerrarSesionAdmin() {
     setSesion(null);
     setAlumnos([]);
     setContactos([]);
-    setErrorAlumnos('');
-    setMostrarLogin(false);
+    setError('');
+    navegar('inicio');
   }
+
+  function iniciarSesionEstudiante(datos) {
+    setSesionEstudiante(datos);
+    navegar('student-dashboard');
+  }
+
+  function cerrarSesionEstudiante() {
+    setSesionEstudiante(null);
+    navegar('inicio');
+  }
+
+  const mostrarHome = pagina === 'inicio';
+  const mostrarPortalEstudiante = pagina === 'student-login' || pagina === 'student-dashboard';
+  const mostrarPortalPersonal = pagina === 'staff-login' || pagina === 'staff-dashboard';
 
   return (
     <>
-      <Header />
+      <Header onNavigate={navegar} />
 
-      <Home />
+      {mostrarHome && <Home />}
 
-      <StudentAccess
-        sesion={sesionEstudiante}
-        onLogin={setSesionEstudiante}
-        onLogout={() => setSesionEstudiante(null)}
-      />
+      {mostrarPortalEstudiante && (
+        <StudentAccess
+          sesion={pagina === 'student-dashboard' ? sesionEstudiante : null}
+          onLogin={iniciarSesionEstudiante}
+          onLogout={cerrarSesionEstudiante}
+          onNavigate={navegar}
+        />
+      )}
 
-      <section
-        className="contact-section"
-        id="area-administrativa"
-      >
-        {!sesion && !mostrarLogin && (
-          <>
-            <span className="section-eyebrow">
-              ACCESO RESTRINGIDO
-            </span>
-            <h2>Área administrativa</h2>
-            <p>
-              Inicia sesión para revisar alumnos y mensajes de contacto.
-            </p>
-            <button
-              className="button-primary"
-              onClick={() => setMostrarLogin(true)}
-            >
-              Iniciar sesión
-            </button>
-          </>
-        )}
+      {mostrarPortalPersonal && (
+        <section className="contact-section" id="area-administrativa">
+          {!sesion ? (
+            <Login onLogin={iniciarSesionAdmin} />
+          ) : (
+            <div className="admin-dashboard">
+              <span className="section-eyebrow">PANEL DE DOCENTES Y ADMINISTRACIÓN</span>
+              <h2>Bienvenida, {sesion.nombre}</h2>
+              <button className="button-secondary" onClick={cerrarSesionAdmin}>Cerrar sesión</button>
 
-        {mostrarLogin && !sesion && (
-          <Login onLogin={iniciarSesion} />
-        )}
-
-        {sesion && (
-          <div className="admin-dashboard">
-            <span className="section-eyebrow">PANEL ADMINISTRATIVO</span>
-            <h2>Bienvenida, {sesion.nombre}</h2>
-            <button className="button-secondary" onClick={cerrarSesion}>Cerrar sesión</button>
-
-            <div className="admin-stats">
-              <article><strong>{alumnos.length}</strong><span>Alumnos registrados</span></article>
-              <article><strong>{contactos.length}</strong><span>Mensajes recibidos</span></article>
-              <article><strong>{contactos.filter((contacto) => !contacto.leido).length}</strong><span>Mensajes sin leer</span></article>
-            </div>
-
-            {errorAlumnos && <p role="alert" className="admin-error">{errorAlumnos}</p>}
-
-            <div className="admin-table-section">
-              <div className="admin-section-heading">
-                <h3>Alumnos registrados</h3>
-                <button className="button-primary" onClick={() => consultarDatosAdmin(sesion.token)} disabled={cargandoAlumnos}>
-                  {cargandoAlumnos ? 'Actualizando...' : 'Actualizar información'}
-                </button>
+              <div className="admin-stats">
+                <article><strong>{alumnos.length}</strong><span>Alumnos registrados</span></article>
+                <article><strong>{contactos.length}</strong><span>Mensajes recibidos</span></article>
+                <article><strong>{contactos.filter((contacto) => !contacto.leido).length}</strong><span>Mensajes sin leer</span></article>
               </div>
-              {cargandoAlumnos ? <p role="status">Cargando información...</p> : (
-                <div className="admin-table-wrap">
-                  <table>
-                    <thead><tr><th>Nombre</th><th>Correo</th><th>Nivel</th><th>Materias</th><th>Estado</th></tr></thead>
-                    <tbody>
-                      {alumnos.map((alumno) => (
-                        <tr key={alumno._id}>
-                          <td>{alumno.nombre}</td><td>{alumno.email}</td><td>{alumno.nivel}</td>
-                          <td>{Array.isArray(alumno.materias) && alumno.materias.length ? alumno.materias.join(', ') : 'Sin asignar'}</td>
-                          <td>{alumno.estado || 'Sin estado'}</td>
-                        </tr>
-                      ))}
-                      {alumnos.length === 0 && <tr><td colSpan="5">No hay alumnos registrados.</td></tr>}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
 
-            <div className="admin-table-section">
-              <h3>Mensajes de contacto</h3>
-              {!cargandoAlumnos && (
-                <div className="admin-table-wrap">
-                  <table>
-                    <thead><tr><th>Nombre</th><th>Correo</th><th>Nivel</th><th>Mensaje</th><th>Fecha</th><th>Estado</th></tr></thead>
-                    <tbody>
-                      {contactos.map((contacto) => (
-                        <tr key={contacto._id}>
-                          <td>{contacto.nombre}</td><td>{contacto.email}</td><td>{contacto.nivel}</td>
-                          <td>{contacto.mensaje}</td><td>{new Date(contacto.fechaEnvio).toLocaleDateString('es-EC')}</td>
-                          <td>{contacto.leido ? 'Leído' : <button className="admin-read-button" onClick={() => marcarMensajeLeido(contacto._id)}>Marcar leído</button>}</td>
-                        </tr>
-                      ))}
-                      {contactos.length === 0 && <tr><td colSpan="6">No hay mensajes recibidos.</td></tr>}
-                    </tbody>
-                  </table>
+              {error && <p role="alert" className="admin-error">{error}</p>}
+
+              <div className="admin-table-section">
+                <div className="admin-section-heading">
+                  <h3>Alumnos registrados</h3>
+                  <button className="button-primary" onClick={() => consultarDatosAdmin(sesion.token)} disabled={cargando}>
+                    {cargando ? 'Actualizando...' : 'Actualizar información'}
+                  </button>
                 </div>
-              )}
+                {mensajeCredenciales && <p className="admin-credential-message" role="status">{mensajeCredenciales}</p>}
+                {cargando ? <p role="status">Cargando información...</p> : (
+                  <div className="admin-table-wrap">
+                    <table>
+                      <thead><tr><th>Nombre</th><th>Correo</th><th>Nivel</th><th>Materias</th><th>Estado</th><th>Acceso</th></tr></thead>
+                      <tbody>
+                        {alumnos.map((alumno) => (
+                          <tr key={alumno._id}>
+                            <td>{alumno.nombre}</td><td>{alumno.email}</td><td>{alumno.nivel}</td>
+                            <td>{Array.isArray(alumno.materias) && alumno.materias.length ? alumno.materias.join(', ') : 'Sin asignar'}</td>
+                            <td>{alumno.estado || 'Sin estado'}</td>
+                            <td>
+                              <div className="admin-password-control">
+                                <input type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="Nueva contraseña" aria-label={`Nueva contraseña para ${alumno.nombre}`} value={credenciales[alumno._id] || ''} onChange={(event) => setCredenciales((anteriores) => ({ ...anteriores, [alumno._id]: event.target.value }))} />
+                                <button type="button" disabled={(credenciales[alumno._id] || '').length < 8} onClick={() => guardarContrasena(alumno._id)}>Guardar</button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                        {alumnos.length === 0 && <tr><td colSpan="6">No hay alumnos registrados.</td></tr>}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                <p className="admin-credential-message">Este control también permite activar el acceso de estudiantes inscritos antes de crear cuentas.</p>
+              </div>
+
+              <div className="admin-table-section">
+                <h3>Mensajes de contacto</h3>
+                {!cargando && (
+                  <div className="admin-table-wrap">
+                    <table>
+                      <thead><tr><th>Nombre</th><th>Correo</th><th>Nivel</th><th>Mensaje</th><th>Fecha</th><th>Estado</th></tr></thead>
+                      <tbody>
+                        {contactos.map((contacto) => (
+                          <tr key={contacto._id}>
+                            <td>{contacto.nombre}</td><td>{contacto.email}</td><td>{contacto.nivel}</td>
+                            <td>{contacto.mensaje}</td><td>{new Date(contacto.fechaEnvio).toLocaleDateString('es-EC')}</td>
+                            <td>{contacto.leido ? 'Leído' : <button className="admin-read-button" onClick={() => marcarMensajeLeido(contacto._id)}>Marcar leído</button>}</td>
+                          </tr>
+                        ))}
+                        {contactos.length === 0 && <tr><td colSpan="6">No hay mensajes recibidos.</td></tr>}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
-      </section>
+          )}
+        </section>
+      )}
 
       <footer className="site-footer">
-        <a href="#inicio" className="footer-brand">
-          Fórmula <strong>Exacta</strong>
-        </a>
-        <p>
-          © {new Date().getFullYear()} Fórmula Exacta.
-          Todos los derechos reservados.
-        </p>
+        <a href="?" className="footer-brand" onClick={(event) => { event.preventDefault(); navegar('inicio', 'inicio'); }}>Fórmula <strong>Exacta</strong></a>
+        <p>© {new Date().getFullYear()} Fórmula Exacta. Todos los derechos reservados.</p>
       </footer>
-      <Chatbot />
+      {mostrarHome && <Chatbot />}
     </>
   );
 }

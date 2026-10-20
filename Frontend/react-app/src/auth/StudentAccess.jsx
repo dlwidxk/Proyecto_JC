@@ -13,7 +13,7 @@ const programasPorNivel = {
   },
 };
 
-function StudentAccess({ sesion, onLogin, onLogout }) {
+function StudentAccess({ sesion, onLogin, onLogout, onNavigate }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -87,10 +87,10 @@ function StudentAccess({ sesion, onLogin, onLogout }) {
           </form>
 
           <p className="student-login-help">
-            ¿Aún no tienes cuenta? <a href="#inscripciones">Crea tu cuenta al inscribirte.</a>
+            ¿Aún no tienes cuenta? <a href="?" onClick={(event) => { event.preventDefault(); onNavigate('inicio', 'inscripciones'); }}>Crea tu cuenta al inscribirte.</a>
           </p>
           <p className="student-login-help">
-            ¿Ya estabas inscrito y no tienes contraseña? <a href="#contacto">Escríbenos para activar tu acceso.</a>
+            ¿Ya estabas inscrito y no tienes contraseña? <a href="?" onClick={(event) => { event.preventDefault(); onNavigate('inicio', 'contacto'); }}>Escríbenos para activar tu acceso.</a>
           </p>
         </div>
       ) : (
@@ -104,7 +104,7 @@ function StudentAccess({ sesion, onLogin, onLogout }) {
             <p>Áreas de estudio: {programa?.materias || 'Consulta tus materias con la academia'}.</p>
             <p>Estado de la cuenta: {sesion.alumno.estado || 'Activo'}.</p>
           </div>
-          <a className="student-course-link" href="#cursos">Ver el contenido de tus cursos <span aria-hidden="true">↗</span></a>
+          <a className="student-course-link" href="?" onClick={(event) => { event.preventDefault(); onNavigate('inicio', 'cursos'); }}>Ver el contenido de tus cursos <span aria-hidden="true">↗</span></a>
           <button className="button-secondary student-logout" onClick={onLogout}>Cerrar sesión</button>
         </div>
       )}
