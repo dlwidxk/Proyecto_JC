@@ -150,12 +150,25 @@ function StudentAccess({ sesion, onLogin, onLogout, onNavigate }) {
                   <strong>Pruébalo por tu cuenta</strong>
                   <p>{materiaSeleccionada.practica}</p>
                 </div>
-                <a className="student-video-link" href={materiaSeleccionada.url} target="_blank" rel="noreferrer">
-                  <span aria-hidden="true">▶</span>
-                  Ver video: {materiaSeleccionada.video}
-                  <span aria-hidden="true">↗</span>
-                </a>
-                <small className="student-resource-credit">Recurso educativo de Khan Academy en español.</small>
+                {/* Así el estudiante puede empezar a ver el recurso sin salir de su espacio. */}
+                <div className="student-video-block">
+                  <h4>Video de apoyo: {materiaSeleccionada.video}</h4>
+                  <div className="student-video-frame-wrap">
+                    <iframe
+                      title={materiaSeleccionada.video}
+                      src={`https://www.youtube-nocookie.com/embed/${materiaSeleccionada.videoId}`}
+                      loading="lazy"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                  <a className="student-video-link" href={materiaSeleccionada.url} target="_blank" rel="noreferrer">
+                    Si el video no carga, ábrelo en Khan Academy
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+                <small className="student-resource-credit">Video de {materiaSeleccionada.videoFuente}.</small>
               </article>
             </>
           )}
